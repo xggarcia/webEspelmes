@@ -1,0 +1,117 @@
+{
+  "brand": {
+    "name": "Espelmes",
+    "tagline": "Espelmes fetes a casa, amb cera, paciència i molta cura.",
+    "shortTagline": "Fetes a mà, una a una."
+  },
+  "nav": {
+    "home": "Inici",
+    "shop": "Botiga",
+    "customize": "Personalitza",
+    "about": "Sobre nosaltres",
+    "contact": "Contacte",
+    "cart": "Cistell",
+    "account": "El meu compte",
+    "login": "Entra",
+    "register": "Crea un compte",
+    "logout": "Tanca la sessió"
+  },
+  "home": {
+    "heroTitle": "Cada espelma, una petita història",
+    "heroLead": "Treballem la cera a casa. Escollim les olors i els colors amb calma. Cada espelma surt de les nostres mans — i ara pot sortir amb el teu toc.",
+    "ctaShop": "Veure la botiga",
+    "ctaCustomize": "Personalitza la teva",
+    "featuredTitle": "Destacades aquesta setmana",
+    "storyTitle": "Fetes amb temps, a foc lent",
+    "storyBody": "Som una família que treballa la cera des de fa molts anys. Quan una espelma neix, ha passat per les nostres mans — i d'aquí és d'on li ve la seva llum."
+  },
+  "catalog": {
+    "title": "La botiga",
+    "lead": "Fes una ullada a les nostres espelmes. Totes elles fetes artesanalment.",
+    "filterCategory": "Categoria",
+    "filterAll": "Totes",
+    "sort": "Ordena per",
+    "sortNew": "Novetats",
+    "sortPriceAsc": "Preu: de menys a més",
+    "sortPriceDesc": "Preu: de més a menys",
+    "empty": "No hem trobat espelmes ara mateix.",
+    "personalize": "Personalitzable"
+  },
+  "product": {
+    "addToCart": "Afegeix al cistell",
+    "customize": "Personalitza aquesta",
+    "inStock": "{n, plural, one {# unitat disponible} other {# unitats disponibles}}",
+    "outOfStock": "Esgotat",
+    "description": "Descripció",
+    "options": "Opcions",
+    "quantity": "Quantitat"
+  },
+  "cart": {
+    "title": "El teu cistell",
+    "empty": "Encara no hi ha res al cistell.",
+    "goShop": "Anar a la botiga",
+    "subtotal": "Subtotal",
+    "shippingNote": "L'enviament es calcula al pagament.",
+    "checkout": "Pagar",
+    "remove": "Treu",
+    "qty": "Qtat."
+  },
+  "checkout": {
+    "title": "Pagament",
+    "lead": "Només un pas més. Envia'ns la teva adreça i ja està.",
+    "email": "Correu electrònic",
+    "fullName": "Nom complet",
+    "street": "Adreça",
+    "city": "Ciutat",
+    "postalCode": "Codi postal",
+    "country": "País",
+    "notes": "Notes per a nosaltres (opcional)",
+    "pay": "Confirmar comanda",
+    "stripeDev": "Stripe no està configurat en aquest entorn. La comanda es crearà en estat PENDENT i la podràs veure al teu compte.",
+    "successTitle": "Gràcies!",
+    "successBody": "Hem rebut la teva comanda i la preparem amb molt de gust.",
+    "backHome": "Tornar a l'inici"
+  },
+  "auth": {
+    "loginTitle": "Entra al teu compte",
+    "registerTitle": "Crea un compte",
+    "email": "Correu electrònic",
+    "password": "Contrasenya",
+    "name": "Com et diguem?",
+    "submitLogin": "Entra",
+    "submitRegister": "Crea el compte",
+    "noAccount": "Encara no tens compte?",
+    "haveAccount": "Ja tens compte?",
+    "createOne": "Crea'n un",
+    "loginHere": "Entra aquí",
+    "invalidCredentials": "Credencials incorrectes.",
+    "unexpectedError": "Hi ha hagut un problema. Torna-ho a provar."
+  },
+  "account": {
+    "title": "El meu compte",
+    "lead": "Aquí veuràs les teves comandes.",
+    "noOrders": "Encara no has fet cap comanda.",
+    "orderNumber": "Comanda",
+    "status": "Estat",
+    "total": "Total",
+    "placed": "Feta el"
+  },
+  "about": {
+    "title": "Qui som",
+    "p1": "Som una família petita que treballa la cera a casa. La mare va començar, i ara ho fem plegats.",
+    "p2": "Escollim les essències una a una, fem proves llargues abans que una espelma arribi a la botiga, i les posem en caixes que embolicem a mà."
+  },
+  "contact": {
+    "title": "Parla amb nosaltres",
+    "lead": "Una dubte, un encàrrec especial, una idea? Escriu-nos.",
+    "name": "El teu nom",
+    "email": "Correu",
+    "message": "Missatge",
+    "send": "Envia",
+    "thanks": "Gràcies! Et contestem aviat."
+  },
+  "footer": {
+    "rights": "Fet a mà — tots els drets reservats",
+    "language": "Idioma"
+  }
+}

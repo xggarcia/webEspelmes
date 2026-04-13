@@ -1,0 +1,117 @@
+{
+  "brand": {
+    "name": "Espelmes",
+    "tagline": "Velas hechas en casa, con cera, paciencia y mucho cariño.",
+    "shortTagline": "Hechas a mano, una a una."
+  },
+  "nav": {
+    "home": "Inicio",
+    "shop": "Tienda",
+    "customize": "Personaliza",
+    "about": "Sobre nosotros",
+    "contact": "Contacto",
+    "cart": "Cesta",
+    "account": "Mi cuenta",
+    "login": "Entrar",
+    "register": "Crear cuenta",
+    "logout": "Cerrar sesión"
+  },
+  "home": {
+    "heroTitle": "Cada vela, una pequeña historia",
+    "heroLead": "Trabajamos la cera en casa. Elegimos los aromas y los colores con calma. Cada vela sale de nuestras manos — y ahora puede salir con tu toque.",
+    "ctaShop": "Ver la tienda",
+    "ctaCustomize": "Personaliza la tuya",
+    "featuredTitle": "Destacadas esta semana",
+    "storyTitle": "Hechas con tiempo, a fuego lento",
+    "storyBody": "Somos una familia que trabaja la cera desde hace muchos años. Cuando una vela nace, ha pasado por nuestras manos — y de ahí le viene su luz."
+  },
+  "catalog": {
+    "title": "La tienda",
+    "lead": "Echa un vistazo a nuestras velas. Todas hechas artesanalmente.",
+    "filterCategory": "Categoría",
+    "filterAll": "Todas",
+    "sort": "Ordenar por",
+    "sortNew": "Novedades",
+    "sortPriceAsc": "Precio: de menor a mayor",
+    "sortPriceDesc": "Precio: de mayor a menor",
+    "empty": "No hemos encontrado velas ahora mismo.",
+    "personalize": "Personalizable"
+  },
+  "product": {
+    "addToCart": "Añadir a la cesta",
+    "customize": "Personaliza esta",
+    "inStock": "{n, plural, one {# unidad disponible} other {# unidades disponibles}}",
+    "outOfStock": "Agotado",
+    "description": "Descripción",
+    "options": "Opciones",
+    "quantity": "Cantidad"
+  },
+  "cart": {
+    "title": "Tu cesta",
+    "empty": "Aún no hay nada en la cesta.",
+    "goShop": "Ir a la tienda",
+    "subtotal": "Subtotal",
+    "shippingNote": "El envío se calcula en el pago.",
+    "checkout": "Pagar",
+    "remove": "Quitar",
+    "qty": "Cant."
+  },
+  "checkout": {
+    "title": "Pago",
+    "lead": "Un paso más. Envíanos tu dirección y listo.",
+    "email": "Correo electrónico",
+    "fullName": "Nombre completo",
+    "street": "Dirección",
+    "city": "Ciudad",
+    "postalCode": "Código postal",
+    "country": "País",
+    "notes": "Notas para nosotros (opcional)",
+    "pay": "Confirmar pedido",
+    "stripeDev": "Stripe no está configurado en este entorno. El pedido se creará como PENDIENTE y lo podrás ver en tu cuenta.",
+    "successTitle": "¡Gracias!",
+    "successBody": "Hemos recibido tu pedido y lo preparamos con mucho cariño.",
+    "backHome": "Volver al inicio"
+  },
+  "auth": {
+    "loginTitle": "Entra en tu cuenta",
+    "registerTitle": "Crea una cuenta",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "name": "¿Cómo te llamamos?",
+    "submitLogin": "Entrar",
+    "submitRegister": "Crear cuenta",
+    "noAccount": "¿Aún no tienes cuenta?",
+    "haveAccount": "¿Ya tienes cuenta?",
+    "createOne": "Crea una",
+    "loginHere": "Entra aquí",
+    "invalidCredentials": "Credenciales incorrectas.",
+    "unexpectedError": "Ha habido un problema. Inténtalo de nuevo."
+  },
+  "account": {
+    "title": "Mi cuenta",
+    "lead": "Aquí verás tus pedidos.",
+    "noOrders": "Aún no has hecho ningún pedido.",
+    "orderNumber": "Pedido",
+    "status": "Estado",
+    "total": "Total",
+    "placed": "Realizado el"
+  },
+  "about": {
+    "title": "Quiénes somos",
+    "p1": "Somos una familia pequeña que trabaja la cera en casa. Mamá empezó, y ahora lo hacemos juntos.",
+    "p2": "Elegimos las esencias una a una, hacemos pruebas largas antes de que una vela llegue a la tienda, y las ponemos en cajas que envolvemos a mano."
+  },
+  "contact": {
+    "title": "Habla con nosotros",
+    "lead": "¿Una duda, un encargo especial, una idea? Escríbenos.",
+    "name": "Tu nombre",
+    "email": "Correo",
+    "message": "Mensaje",
+    "send": "Enviar",
+    "thanks": "¡Gracias! Te contestamos pronto."
+  },
+  "footer": {
+    "rights": "Hecho a mano — todos los derechos reservados",
+    "language": "Idioma"
+  }
+}

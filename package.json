@@ -1,0 +1,30 @@
+{
+  "name": "webespelmes",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Handmade candle shop — Espelmes de ca la mare. Monorepo (web + api).",
+  "packageManager": "pnpm@9.12.0",
+  "engines": {
+    "node": ">=20.11.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
+    "db:migrate": "pnpm --filter @espelmes/api prisma migrate dev",
+    "db:seed": "pnpm --filter @espelmes/api prisma db seed",
+    "db:reset": "pnpm --filter @espelmes/api prisma migrate reset",
+    "docker:up": "docker compose -f infra/compose/docker-compose.yml up -d",
+    "docker:down": "docker compose -f infra/compose/docker-compose.yml down",
+    "docker:prod": "docker compose -f infra/compose/docker-compose.prod.yml up -d"
+  },
+  "devDependencies": {
+    "turbo": "^2.1.3",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.3"
+  }
+}

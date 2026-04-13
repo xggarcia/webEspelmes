@@ -1,0 +1,18 @@
+/* Shared base styles; imported from apps/web globals.css */
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  background-color: #f7f1e5;
+  color: #2b201a;
+}
+
+::selection {
+  background: rgba(138, 58, 30, 0.2);
+}
+
+.prose-warm p {
+  line-height: 1.7;
+}

@@ -1,0 +1,372 @@
+// Espelmes — Prisma schema
+// Designed to cover all phases: auth, catalog, cart, configurator, orders, payments, commands, audit.
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = []
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FULFILLED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  REQUIRES_PAYMENT
+  PROCESSING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+enum StockMovementKind {
+  PURCHASE    // customer bought, stock decreases
+  REFUND      // refunded, stock returns
+  ADJUSTMENT  // manual admin change
+  RESTOCK     // incoming batch
+}
+
+enum ProductOptionKind {
+  color
+  size
+  finish
+  shape
+  platform
+  label
+  accessory
+}
+
+// -----------------------------------------------------------------------------
+// Users & auth
+// -----------------------------------------------------------------------------
+
+model User {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  name           String
+  passwordHash   String
+  role           Role      @default(CUSTOMER)
+  emailVerifiedAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  addresses      Address[]
+  orders         Order[]
+  cart           Cart?
+  refreshTokens  RefreshToken[]
+  passwordResets PasswordResetToken[]
+  auditLogs      AuditLog[] @relation("AuditActor")
+
+  @@index([role])
+}
+
+model RefreshToken {
+  id         String   @id @default(cuid())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  tokenHash  String   @unique
+  familyId   String   // for rotation / re-use detection
+  issuedAt   DateTime @default(now())
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  replacedBy String?
+  userAgent  String?
+  ip         String?
+
+  @@index([userId])
+  @@index([familyId])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Address {
+  id         String   @id @default(cuid())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  fullName   String
+  street     String
+  street2    String   @default("")
+  city       String
+  region     String   @default("")
+  postalCode String
+  country    String   @default("ES")
+  phone      String   @default("")
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+}
+
+// -----------------------------------------------------------------------------
+// Catalog
+// -----------------------------------------------------------------------------
+
+model Category {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String   @default("")
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  products    Product[]
+}
+
+model Product {
+  id               String   @id @default(cuid())
+  slug             String   @unique
+  name             String
+  shortDescription String   @default("")
+  description      String   @default("")
+  basePriceCents   Int
+  currency         String   @default("EUR")
+  vatRate          Float    @default(0.21)
+  stock            Int      @default(0)
+  isCustomizable   Boolean  @default(true)
+  isActive         Boolean  @default(true)
+  heroImageUrl     String?
+  category         Category @relation(fields: [categoryId], references: [id])
+  categoryId       String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  images           ProductImage[]
+  options          ProductOption[]
+  cartItems        CartItem[]
+  orderItems       OrderItem[]
+  stockMovements   StockMovement[]
+
+  @@index([categoryId])
+  @@index([isActive])
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  url       String
+  alt       String?
+  sortOrder Int      @default(0)
+
+  @@index([productId])
+}
+
+model ProductOption {
+  id        String             @id @default(cuid())
+  product   Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  kind      ProductOptionKind
+  label     String
+  required  Boolean            @default(false)
+  sortOrder Int                @default(0)
+  values    ProductOptionValue[]
+
+  @@index([productId])
+}
+
+model ProductOptionValue {
+  id               String        @id @default(cuid())
+  option           ProductOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  optionId         String
+  code             String
+  label            String
+  priceDeltaCents  Int           @default(0)
+  meta             Json?
+  sortOrder        Int           @default(0)
+
+  @@unique([optionId, code])
+}
+
+model StockMovement {
+  id         String             @id @default(cuid())
+  product    Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId  String
+  kind       StockMovementKind
+  delta      Int
+  reason     String             @default("")
+  createdAt  DateTime           @default(now())
+  createdBy  String?
+
+  @@index([productId])
+}
+
+// -----------------------------------------------------------------------------
+// Cart
+// -----------------------------------------------------------------------------
+
+model Cart {
+  id         String     @id @default(cuid())
+  user       User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String?    @unique
+  anonToken  String?    @unique
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  items      CartItem[]
+}
+
+model CartItem {
+  id             String   @id @default(cuid())
+  cart           Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cartId         String
+  product        Product  @relation(fields: [productId], references: [id])
+  productId      String
+  quantity       Int      @default(1)
+  unitPriceCents Int
+  customization  Json?    // ConfiguratorState
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([cartId])
+}
+
+// -----------------------------------------------------------------------------
+// Orders & payments
+// -----------------------------------------------------------------------------
+
+model ShippingZone {
+  id          String  @id @default(cuid())
+  code        String  @unique
+  name        String
+  priceCents  Int
+  isActive    Boolean @default(true)
+}
+
+model Order {
+  id                  String       @id @default(cuid())
+  number              String       @unique
+  user                User?        @relation(fields: [userId], references: [id])
+  userId              String?
+  email               String
+  status              OrderStatus  @default(PENDING)
+  subtotalCents       Int
+  shippingCents       Int
+  taxCents            Int
+  totalCents          Int
+  currency            String       @default("EUR")
+  shippingAddress     Json
+  billingAddress      Json?
+  notes               String       @default("")
+  stripePaymentIntentId String?    @unique
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+
+  items               OrderItem[]
+  payments            Payment[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model OrderItem {
+  id             String   @id @default(cuid())
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId        String
+  product        Product  @relation(fields: [productId], references: [id])
+  productId      String
+  name           String
+  quantity       Int
+  unitPriceCents Int
+  customization  Json?
+
+  @@index([orderId])
+}
+
+model Payment {
+  id                    String        @id @default(cuid())
+  order                 Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId               String
+  provider              String        @default("stripe")
+  stripePaymentIntentId String?
+  stripeChargeId        String?
+  status                PaymentStatus @default(REQUIRES_PAYMENT)
+  amountCents           Int
+  currency              String        @default("EUR")
+  rawEvent              Json?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  @@index([orderId])
+  @@index([stripePaymentIntentId])
+}
+
+// Ensures Stripe webhook idempotency: one row per event.id.
+model StripeEvent {
+  id         String   @id // Stripe event id
+  type       String
+  payload    Json
+  receivedAt DateTime @default(now())
+}
+
+// -----------------------------------------------------------------------------
+// Admin: commands & audit
+// -----------------------------------------------------------------------------
+
+model CommandRun {
+  id         String   @id @default(cuid())
+  name       String
+  actorId    String?
+  input      Json
+  result     Json?
+  success    Boolean
+  durationMs Int
+  affected   Int      @default(0)
+  errorCode  String?
+  errorMsg   String?
+  createdAt  DateTime @default(now())
+
+  @@index([name])
+  @@index([createdAt])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actor     User?    @relation("AuditActor", fields: [actorId], references: [id])
+  actorId   String?
+  action    String   // e.g. "product.update", "order.status.change", "command.run"
+  target    String?  // resource id / name
+  metadata  Json?
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([action])
+  @@index([createdAt])
+  @@index([actorId])
+}
+
+// -----------------------------------------------------------------------------
+// Misc
+// -----------------------------------------------------------------------------
+
+model NewsletterSubscription {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
