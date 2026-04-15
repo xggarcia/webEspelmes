@@ -1,0 +1,71 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Espelmes" [ref=e4] [cursor=pointer]:
+        - /url: /ca
+        - generic [ref=e5]: Espelmes
+      - navigation [ref=e6]:
+        - link "Inici" [ref=e7] [cursor=pointer]:
+          - /url: /ca
+        - link "Botiga" [ref=e8] [cursor=pointer]:
+          - /url: /ca/botiga
+        - link "Sobre nosaltres" [ref=e9] [cursor=pointer]:
+          - /url: /ca/sobre-nosaltres
+        - link "Contacte" [ref=e10] [cursor=pointer]:
+          - /url: /ca/contacte
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - button "CA" [pressed] [ref=e13] [cursor=pointer]
+          - button "ES" [ref=e14] [cursor=pointer]
+        - link "Cistell" [ref=e15] [cursor=pointer]:
+          - /url: /ca/cistell
+        - link "Admin" [ref=e16] [cursor=pointer]:
+          - /url: /ca/admin/dashboard
+        - link "El meu compte" [ref=e17] [cursor=pointer]:
+          - /url: /ca/compte
+  - main [ref=e18]:
+    - generic [ref=e19]:
+      - generic [ref=e21]:
+        - paragraph [ref=e22]: Admin
+        - heading "Hola, Administradora" [level=1] [ref=e23]
+      - navigation [ref=e24]:
+        - link "Tauler" [ref=e25] [cursor=pointer]:
+          - /url: /ca/admin/dashboard
+        - link "Productes" [ref=e26] [cursor=pointer]:
+          - /url: /ca/admin/products
+        - link "Comandes" [ref=e27] [cursor=pointer]:
+          - /url: /ca/admin/orders
+        - link "Clients" [ref=e28] [cursor=pointer]:
+          - /url: /ca/admin/customers
+        - link "Ordres" [ref=e29] [cursor=pointer]:
+          - /url: /ca/admin/commands
+        - link "Auditoria" [ref=e30] [cursor=pointer]:
+          - /url: /ca/admin/audit
+      - main [ref=e31]:
+        - generic [ref=e32]:
+          - generic [ref=e33]:
+            - generic [ref=e34]:
+              - paragraph [ref=e35]: Productes actius
+              - paragraph [ref=e36]: 4 / 4
+            - generic [ref=e37]:
+              - paragraph [ref=e38]: Comandes obertes
+              - paragraph [ref=e39]: "2"
+            - generic [ref=e40]:
+              - paragraph [ref=e41]: Clients
+              - paragraph [ref=e42]: "1"
+            - generic [ref=e43]:
+              - paragraph [ref=e44]: Facturació acumulada
+              - paragraph [ref=e45]: 82,00 €
+            - generic [ref=e46]:
+              - paragraph [ref=e47]: Comandes últims 30 dies
+              - paragraph [ref=e48]: "2"
+            - generic [ref=e49]:
+              - paragraph [ref=e50]: Total comandes cobrades
+              - paragraph [ref=e51]: "2"
+          - generic [ref=e52]:
+            - heading "Estoc baix" [level=2] [ref=e53]
+            - paragraph [ref=e54]: Tot correcte — cap producte per sota del llindar.
+  - contentinfo [ref=e55]:
+    - generic [ref=e56]:
+      - paragraph [ref=e57]: Fetes a mà, una a una.
+      - paragraph [ref=e58]: © 2026 Espelmes — Fet a mà — tots els drets reservats

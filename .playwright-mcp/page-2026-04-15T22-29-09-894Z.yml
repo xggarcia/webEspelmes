@@ -1,0 +1,102 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Espelmes" [ref=e4] [cursor=pointer]:
+        - /url: /ca
+        - generic [ref=e5]: Espelmes
+      - navigation [ref=e6]:
+        - link "Inici" [ref=e7] [cursor=pointer]:
+          - /url: /ca
+        - link "Botiga" [ref=e8] [cursor=pointer]:
+          - /url: /ca/botiga
+        - link "Sobre nosaltres" [ref=e9] [cursor=pointer]:
+          - /url: /ca/sobre-nosaltres
+        - link "Contacte" [ref=e10] [cursor=pointer]:
+          - /url: /ca/contacte
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - button "CA" [pressed] [ref=e13] [cursor=pointer]
+          - button "ES" [ref=e14] [cursor=pointer]
+        - link "Cistell" [ref=e15] [cursor=pointer]:
+          - /url: /ca/cistell
+        - link "Admin" [ref=e16] [cursor=pointer]:
+          - /url: /ca/admin/dashboard
+        - link "El meu compte" [ref=e17] [cursor=pointer]:
+          - /url: /ca/compte
+  - main [ref=e18]:
+    - generic [ref=e19]:
+      - generic [ref=e21]:
+        - paragraph [ref=e22]: Admin
+        - heading "Hola, Administradora" [level=1] [ref=e23]
+      - navigation [ref=e24]:
+        - link "Tauler" [ref=e25] [cursor=pointer]:
+          - /url: /ca/admin/dashboard
+        - link "Productes" [ref=e26] [cursor=pointer]:
+          - /url: /ca/admin/products
+        - link "Comandes" [ref=e27] [cursor=pointer]:
+          - /url: /ca/admin/orders
+        - link "Clients" [ref=e28] [cursor=pointer]:
+          - /url: /ca/admin/customers
+        - link "Ordres" [ref=e29] [cursor=pointer]:
+          - /url: /ca/admin/commands
+        - link "Auditoria" [ref=e30] [cursor=pointer]:
+          - /url: /ca/admin/audit
+      - main [ref=e31]:
+        - generic [ref=e32]:
+          - heading "Nou producte" [level=2] [ref=e33]
+          - generic [ref=e34]:
+            - generic [ref=e35]:
+              - generic [ref=e36]:
+                - text: Nom
+                - textbox "Nom" [ref=e37]
+              - generic [ref=e38]:
+                - text: Slug
+                - textbox "Slug" [ref=e39]
+              - generic [ref=e40]:
+                - text: Categoria
+                - combobox "Categoria" [ref=e41]:
+                  - option "— Escull —" [selected]
+                  - option "Aromàtiques"
+                  - option "Decoratives"
+                  - option "Personalitzades"
+              - generic [ref=e42]:
+                - text: Preu base (cèntims)
+                - spinbutton "Preu base (cèntims)" [ref=e43]: "0"
+              - generic [ref=e44]:
+                - text: Estoc
+                - spinbutton "Estoc" [ref=e45]: "0"
+              - generic [ref=e46]:
+                - text: IVA (0–1)
+                - spinbutton "IVA (0–1)" [ref=e47]: "0.21"
+            - generic [ref=e48]:
+              - text: Descripció curta
+              - textbox "Descripció curta" [ref=e49]
+            - generic [ref=e50]:
+              - text: Descripció
+              - textbox "Descripció" [ref=e51]
+            - generic [ref=e52]:
+              - text: URL imatge hero
+              - textbox "URL imatge hero" [ref=e53]
+            - group "Model 3D (.glb)" [ref=e54]:
+              - generic [ref=e55]: Model 3D (.glb)
+              - button "Choose File" [ref=e57]
+              - paragraph [ref=e58]: Sense model. El configurador usarà el mode 2D.
+              - generic [ref=e59]:
+                - generic [ref=e60]:
+                  - text: Escala
+                  - spinbutton "Escala" [ref=e61]: "1"
+                - generic [ref=e62]:
+                  - text: Desplaçament Y
+                  - spinbutton "Desplaçament Y" [ref=e63]: "0"
+            - generic [ref=e64]:
+              - generic [ref=e65]:
+                - checkbox "Personalitzable" [checked] [ref=e66]
+                - text: Personalitzable
+              - generic [ref=e67]:
+                - checkbox "Actiu" [checked] [ref=e68]
+                - text: Actiu
+            - button "Crear producte" [ref=e70] [cursor=pointer]
+  - contentinfo [ref=e71]:
+    - generic [ref=e72]:
+      - paragraph [ref=e73]: Fetes a mà, una a una.
+      - paragraph [ref=e74]: © 2026 Espelmes — Fet a mà — tots els drets reservats

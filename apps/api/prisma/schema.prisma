@@ -152,6 +152,8 @@ model Product {
   isCustomizable   Boolean  @default(true)
   isActive         Boolean  @default(true)
   heroImageUrl     String?
+  modelUrl         String?
+  modelMeta        Json?
   category         Category @relation(fields: [categoryId], references: [id])
   categoryId       String
   createdAt        DateTime @default(now())

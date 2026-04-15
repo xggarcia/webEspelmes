@@ -16,6 +16,15 @@ export type CandleFinish = z.infer<typeof CandleFinishSchema>;
 export const PlatformSchema = z.enum(['none', 'wood', 'ceramic', 'metal']);
 export type PlatformType = z.infer<typeof PlatformSchema>;
 
+export const ModelMetaSchema = z
+  .object({
+    scale: z.number().positive().default(1),
+    yOffset: z.number().default(0),
+    cameraFov: z.number().int().min(20).max(75).default(35),
+  })
+  .partial();
+export type ModelMeta = z.infer<typeof ModelMetaSchema>;
+
 export const ProductOptionKindSchema = z.enum([
   'color',
   'size',
@@ -63,5 +72,7 @@ export const ProductDetailSchema = ProductSummarySchema.extend({
   vatRate: z.number().min(0).max(1),
   stock: z.number().int().nonnegative(),
   options: z.array(ProductOptionSchema),
+  modelUrl: z.string().nullable().optional(),
+  modelMeta: ModelMetaSchema.nullable().optional(),
 });
 export type ProductDetail = z.infer<typeof ProductDetailSchema>;

@@ -1,22 +1,25 @@
 import { z } from 'zod';
-import { CandleFinishSchema, CandleShapeSchema, PlatformSchema } from '../catalog';
 
 /**
  * ConfiguratorState is the user-authored customisation.
  * Persisted on cart/order items and consumed by BOTH the 2D canvas preview
  * and any future R3F/three.js 3D viewer — the contract is intentionally
  * render-agnostic (describes the candle, not how it's drawn).
+ *
+ * shape / finish / platform are free-form strings defined by the admin
+ * when creating product options. The renderer applies the closest preset
+ * and falls back gracefully for unknown codes.
  */
 export const ConfiguratorStateSchema = z.object({
   productId: z.string(),
-  shape: CandleShapeSchema,
+  shape: z.string().min(1),
   sizeCode: z.string(), // e.g. "S" | "M" | "L" — resolved against product options
   color: z.object({
     hex: z.string().regex(/^#[0-9a-fA-F]{6}$/),
     name: z.string().optional(),
   }),
-  finish: CandleFinishSchema,
-  platform: PlatformSchema,
+  finish: z.string().min(1),
+  platform: z.string().min(1),
   label: z
     .object({
       text: z.string().max(60).default(''),

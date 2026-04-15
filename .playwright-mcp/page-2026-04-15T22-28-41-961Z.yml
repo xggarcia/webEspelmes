@@ -1,0 +1,36 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Espelmes" [ref=e4] [cursor=pointer]:
+        - /url: /ca
+        - generic [ref=e5]: Espelmes
+      - navigation [ref=e6]:
+        - link "Inici" [ref=e7] [cursor=pointer]:
+          - /url: /ca
+        - link "Botiga" [ref=e8] [cursor=pointer]:
+          - /url: /ca/botiga
+        - link "Sobre nosaltres" [ref=e9] [cursor=pointer]:
+          - /url: /ca/sobre-nosaltres
+        - link "Contacte" [ref=e10] [cursor=pointer]:
+          - /url: /ca/contacte
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - button "CA" [pressed] [ref=e13] [cursor=pointer]
+          - button "ES" [ref=e14] [cursor=pointer]
+        - link "Cistell" [ref=e15] [cursor=pointer]:
+          - /url: /ca/cistell
+        - link "Admin" [ref=e33] [cursor=pointer]:
+          - /url: /ca/admin/dashboard
+        - link "El meu compte" [ref=e34] [cursor=pointer]:
+          - /url: /ca/compte
+  - main [ref=e17]:
+    - generic [ref=e35]:
+      - generic [ref=e36]:
+        - heading "El meu compte" [level=1] [ref=e37]
+        - paragraph [ref=e38]: Aquí veuràs les teves comandes. — admin@espelmes.local
+      - paragraph [ref=e39]: Encara no has fet cap comanda.
+  - contentinfo [ref=e28]:
+    - generic [ref=e29]:
+      - paragraph [ref=e30]: Fetes a mà, una a una.
+      - paragraph [ref=e31]: © 2026 Espelmes — Fet a mà — tots els drets reservats
+  - alert [ref=e32]: El meu compte

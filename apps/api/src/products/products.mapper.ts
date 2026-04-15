@@ -34,6 +34,8 @@ export function toProductDetail(p: ProductWithRelations) {
     images: (p.images ?? []).map((img) => ({ url: img.url, alt: img.alt })),
     vatRate: p.vatRate,
     stock: p.stock,
+    modelUrl: p.modelUrl ?? null,
+    modelMeta: (p.modelMeta as Record<string, unknown> | null) ?? null,
     options: (p.options ?? []).map((o) => ({
       id: o.id,
       kind: o.kind,

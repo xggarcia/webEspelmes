@@ -8,9 +8,10 @@ import {
   Post,
   Req,
   UseGuards,
+  HttpCode,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Role } from '@prisma/client';
+import { Prisma, Role } from '@prisma/client';
 import type { Request } from 'express';
 import { z } from 'zod';
 import { RolesGuard } from '../common/guards/roles.guard';
@@ -19,6 +20,37 @@ import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
 import { CurrentUser, type RequestUser } from '../common/decorators/current-user.decorator';
 import { AuditService } from '../audit/audit.service';
 import { PrismaService } from '../prisma/prisma.service';
+
+const ProductOptionKindEnum = z.enum([
+  'color',
+  'size',
+  'finish',
+  'shape',
+  'platform',
+  'label',
+  'accessory',
+]);
+
+const CreateOptionSchema = z.object({
+  kind: ProductOptionKindEnum,
+  label: z.string().min(1).max(100),
+  required: z.boolean().default(false),
+  sortOrder: z.number().int().default(0),
+});
+
+const CreateOptionValueSchema = z.object({
+  code: z.string().min(1).max(60).regex(/^[a-z0-9_-]+$/),
+  label: z.string().min(1).max(100),
+  priceDeltaCents: z.number().int().default(0),
+  meta: z.record(z.unknown()).optional().nullable(),
+  sortOrder: z.number().int().default(0),
+});
+
+const UpdateOptionValueSchema = CreateOptionValueSchema.partial();
+
+type CreateOptionDto = z.infer<typeof CreateOptionSchema>;
+type CreateOptionValueDto = z.infer<typeof CreateOptionValueSchema>;
+type UpdateOptionValueDto = z.infer<typeof UpdateOptionValueSchema>;
 
 const CreateProductSchema = z.object({
   slug: z.string().min(2).max(120).regex(/^[a-z0-9-]+$/),
@@ -31,6 +63,15 @@ const CreateProductSchema = z.object({
   isCustomizable: z.boolean().default(true),
   isActive: z.boolean().default(true),
   heroImageUrl: z.string().url().optional().nullable(),
+  modelUrl: z.string().optional().nullable(),
+  modelMeta: z
+    .object({
+      scale: z.number().positive().optional(),
+      yOffset: z.number().optional(),
+      cameraFov: z.number().int().min(20).max(75).optional(),
+    })
+    .optional()
+    .nullable(),
   categoryId: z.string().min(1),
 });
 const UpdateProductSchema = CreateProductSchema.partial();
@@ -74,7 +115,15 @@ export class ProductsAdminController {
     @CurrentUser() user: RequestUser,
     @Req() req: Request,
   ) {
-    const created = await this.prisma.product.create({ data: dto });
+    const { modelMeta, ...rest } = dto;
+    const data: Prisma.ProductUncheckedCreateInput = {
+      ...rest,
+      modelMeta:
+        modelMeta === null || modelMeta === undefined
+          ? Prisma.JsonNull
+          : (modelMeta as Prisma.InputJsonValue),
+    };
+    const created = await this.prisma.product.create({ data });
     await this.audit.record({
       action: 'product.create',
       actorId: user.id,
@@ -93,7 +142,15 @@ export class ProductsAdminController {
     @Req() req: Request,
   ) {
     const before = await this.prisma.product.findUniqueOrThrow({ where: { id } });
-    const updated = await this.prisma.product.update({ where: { id }, data: dto });
+    const { modelMeta, ...rest } = dto;
+    const data: Prisma.ProductUncheckedUpdateInput = { ...rest };
+    if (modelMeta !== undefined) {
+      data.modelMeta =
+        modelMeta === null
+          ? Prisma.JsonNull
+          : (modelMeta as Prisma.InputJsonValue);
+    }
+    const updated = await this.prisma.product.update({ where: { id }, data });
     await this.audit.record({
       action: 'product.update',
       actorId: user.id,
@@ -122,6 +179,130 @@ export class ProductsAdminController {
       ip: req.ip ?? '',
     });
     return updated;
+  }
+
+  // ── Options ────────────────────────────────────────────────────────────────
+
+  @Post(':id/options')
+  async createOption(
+    @Param('id') productId: string,
+    @Body(new ZodValidationPipe(CreateOptionSchema)) dto: CreateOptionDto,
+    @CurrentUser() user: RequestUser,
+    @Req() req: Request,
+  ) {
+    await this.prisma.product.findUniqueOrThrow({ where: { id: productId } });
+    const option = await this.prisma.productOption.create({
+      data: { ...dto, productId },
+      include: { values: true },
+    });
+    await this.audit.record({
+      action: 'product.option.create',
+      actorId: user.id,
+      target: productId,
+      metadata: { kind: dto.kind, label: dto.label },
+      ip: req.ip ?? '',
+    });
+    return option;
+  }
+
+  @Delete(':id/options/:optionId')
+  @HttpCode(204)
+  async deleteOption(
+    @Param('id') productId: string,
+    @Param('optionId') optionId: string,
+    @CurrentUser() user: RequestUser,
+    @Req() req: Request,
+  ) {
+    await this.prisma.productOption.delete({
+      where: { id: optionId, productId },
+    });
+    await this.audit.record({
+      action: 'product.option.delete',
+      actorId: user.id,
+      target: productId,
+      metadata: { optionId },
+      ip: req.ip ?? '',
+    });
+  }
+
+  @Post(':id/options/:optionId/values')
+  async createOptionValue(
+    @Param('id') productId: string,
+    @Param('optionId') optionId: string,
+    @Body(new ZodValidationPipe(CreateOptionValueSchema)) dto: CreateOptionValueDto,
+    @CurrentUser() user: RequestUser,
+    @Req() req: Request,
+  ) {
+    await this.prisma.productOption.findUniqueOrThrow({
+      where: { id: optionId, productId },
+    });
+    const { meta, ...rest } = dto;
+    const value = await this.prisma.productOptionValue.create({
+      data: {
+        ...rest,
+        optionId,
+        meta: meta === null || meta === undefined
+          ? Prisma.JsonNull
+          : (meta as Prisma.InputJsonValue),
+      },
+    });
+    await this.audit.record({
+      action: 'product.option.value.create',
+      actorId: user.id,
+      target: productId,
+      metadata: { optionId, code: dto.code, label: dto.label, priceDeltaCents: dto.priceDeltaCents },
+      ip: req.ip ?? '',
+    });
+    return value;
+  }
+
+  @Patch(':id/options/:optionId/values/:valueId')
+  async updateOptionValue(
+    @Param('id') productId: string,
+    @Param('optionId') optionId: string,
+    @Param('valueId') valueId: string,
+    @Body(new ZodValidationPipe(UpdateOptionValueSchema)) dto: UpdateOptionValueDto,
+    @CurrentUser() user: RequestUser,
+    @Req() req: Request,
+  ) {
+    const { meta, ...rest } = dto;
+    const data: Record<string, unknown> = { ...rest };
+    if (meta !== undefined) {
+      data.meta = meta === null ? Prisma.JsonNull : (meta as Prisma.InputJsonValue);
+    }
+    const value = await this.prisma.productOptionValue.update({
+      where: { id: valueId, optionId },
+      data,
+    });
+    await this.audit.record({
+      action: 'product.option.value.update',
+      actorId: user.id,
+      target: productId,
+      metadata: { optionId, valueId, changes: dto },
+      ip: req.ip ?? '',
+    });
+    return value;
+  }
+
+  @Delete(':id/options/:optionId/values/:valueId')
+  @HttpCode(204)
+  async deleteOptionValue(
+    @Param('id') productId: string,
+    @Param('optionId') optionId: string,
+    @Param('valueId') valueId: string,
+    @CurrentUser() user: RequestUser,
+    @Req() req: Request,
+  ) {
+    await this.prisma.productOptionValue.delete({
+      where: { id: valueId, optionId },
+    });
+    await this.audit.record({
+      action: 'product.option.value.delete',
+      actorId: user.id,
+      target: productId,
+      metadata: { optionId, valueId },
+      ip: req.ip ?? '',
+    });
   }
 
   private diff(before: Record<string, unknown>, after: Record<string, unknown>) {

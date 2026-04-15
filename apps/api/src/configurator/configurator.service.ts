@@ -32,16 +32,17 @@ export class ConfiguratorService {
 
     const colorOpt = product.options.find((o) => o.kind === 'color');
     const firstColor = colorOpt?.values[0];
-    const firstColorHex =
-      (firstColor?.meta as { hex?: string } | null)?.hex ?? '#F3E3C3';
+    // Validate hex format — fall back to default wax colour if malformed.
+    const rawHex = (firstColor?.meta as { hex?: string } | null)?.hex ?? '';
+    const firstColorHex = /^#[0-9a-fA-F]{6}$/.test(rawHex) ? rawHex : '#F3E3C3';
 
     const raw: ConfiguratorState = {
       productId: product.id,
-      shape: (firstOf('shape') as ConfiguratorState['shape']) ?? 'pillar',
+      shape: firstOf('shape') ?? 'pillar',
       sizeCode: firstOf('size') ?? 'M',
       color: { hex: firstColorHex, name: firstColor?.label },
-      finish: (firstOf('finish') as ConfiguratorState['finish']) ?? 'matte',
-      platform: (firstOf('platform') as ConfiguratorState['platform']) ?? 'none',
+      finish: firstOf('finish') ?? 'matte',
+      platform: firstOf('platform') ?? 'none',
       label: { text: '', font: 'serif', color: '#2B201A' },
       accessories: [],
       quantity: 1,

@@ -22,6 +22,11 @@ export async function Header() {
         <div className="flex items-center gap-3 text-sm">
           <LocaleSwitcher />
           <Link href="/cistell" className="no-underline hover:text-ember">{t('cart')}</Link>
+          {session?.role === 'ADMIN' && (
+            <Link href="/admin/dashboard" className="no-underline text-ember hover:text-ink">
+              Admin
+            </Link>
+          )}
           {session ? (
             <Link href="/compte" className="no-underline hover:text-ember">{t('account')}</Link>
           ) : (

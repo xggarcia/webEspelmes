@@ -1,0 +1,119 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Espelmes" [ref=e4] [cursor=pointer]:
+        - /url: /ca
+        - generic [ref=e5]: Espelmes
+      - navigation [ref=e6]:
+        - link "Inici" [ref=e7] [cursor=pointer]:
+          - /url: /ca
+        - link "Botiga" [ref=e8] [cursor=pointer]:
+          - /url: /ca/botiga
+        - link "Sobre nosaltres" [ref=e9] [cursor=pointer]:
+          - /url: /ca/sobre-nosaltres
+        - link "Contacte" [ref=e10] [cursor=pointer]:
+          - /url: /ca/contacte
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - button "CA" [pressed] [ref=e13] [cursor=pointer]
+          - button "ES" [ref=e14] [cursor=pointer]
+        - link "Cistell" [ref=e15] [cursor=pointer]:
+          - /url: /ca/cistell
+        - link "Admin" [ref=e16] [cursor=pointer]:
+          - /url: /ca/admin/dashboard
+        - link "El meu compte" [ref=e17] [cursor=pointer]:
+          - /url: /ca/compte
+  - main [ref=e18]:
+    - generic [ref=e19]:
+      - generic [ref=e21]:
+        - paragraph [ref=e22]: Admin
+        - heading "Hola, Administradora" [level=1] [ref=e23]
+      - navigation [ref=e24]:
+        - link "Tauler" [ref=e25] [cursor=pointer]:
+          - /url: /ca/admin/dashboard
+        - link "Productes" [ref=e26] [cursor=pointer]:
+          - /url: /ca/admin/products
+        - link "Comandes" [ref=e27] [cursor=pointer]:
+          - /url: /ca/admin/orders
+        - link "Clients" [ref=e28] [cursor=pointer]:
+          - /url: /ca/admin/customers
+        - link "Ordres" [ref=e29] [cursor=pointer]:
+          - /url: /ca/admin/commands
+        - link "Auditoria" [ref=e30] [cursor=pointer]:
+          - /url: /ca/admin/audit
+      - main [ref=e31]:
+        - generic [ref=e32]:
+          - generic [ref=e33]:
+            - heading "Productes (4)" [level=2] [ref=e34]
+            - link "+ Nou producte" [ref=e35] [cursor=pointer]:
+              - /url: /ca/admin/products/new
+          - table [ref=e37]:
+            - rowgroup [ref=e38]:
+              - row "Nom Categoria Preu Estoc Estat" [ref=e39]:
+                - columnheader "Nom" [ref=e40]
+                - columnheader "Categoria" [ref=e41]
+                - columnheader "Preu" [ref=e42]
+                - columnheader "Estoc" [ref=e43]
+                - columnheader "Estat" [ref=e44]
+                - columnheader [ref=e45]
+            - rowgroup [ref=e46]:
+              - row "Espelma personalitzable espelma-personalitzable Personalitzades 24,00 € 100 Actiu Personalitzable Editar" [ref=e47]:
+                - cell "Espelma personalitzable espelma-personalitzable" [ref=e48]:
+                  - generic [ref=e49]: Espelma personalitzable
+                  - generic [ref=e50]: espelma-personalitzable
+                - cell "Personalitzades" [ref=e51]
+                - cell "24,00 €" [ref=e52]
+                - cell "100" [ref=e53]
+                - cell "Actiu Personalitzable" [ref=e54]:
+                  - generic [ref=e55]:
+                    - generic [ref=e56]: Actiu
+                    - generic [ref=e57]: Personalitzable
+                - cell "Editar" [ref=e58]:
+                  - link "Editar" [ref=e59] [cursor=pointer]:
+                    - /url: /ca/admin/products/cmnxon5f1000eui1c6l0pzq7x
+              - row "Pilar rosa pàl·lid pilar-rosa-palo Decoratives 22,00 € 30 Actiu Personalitzable Editar" [ref=e60]:
+                - cell "Pilar rosa pàl·lid pilar-rosa-palo" [ref=e61]:
+                  - generic [ref=e62]: Pilar rosa pàl·lid
+                  - generic [ref=e63]: pilar-rosa-palo
+                - cell "Decoratives" [ref=e64]
+                - cell "22,00 €" [ref=e65]
+                - cell "30" [ref=e66]
+                - cell "Actiu Personalitzable" [ref=e67]:
+                  - generic [ref=e68]:
+                    - generic [ref=e69]: Actiu
+                    - generic [ref=e70]: Personalitzable
+                - cell "Editar" [ref=e71]:
+                  - link "Editar" [ref=e72] [cursor=pointer]:
+                    - /url: /ca/admin/products/cmnxon5ez000cui1cc61ya2ht
+              - row "Taronger en flor taronger-en-flor Aromàtiques 19,00 € 18 Actiu Personalitzable Editar" [ref=e73]:
+                - cell "Taronger en flor taronger-en-flor" [ref=e74]:
+                  - generic [ref=e75]: Taronger en flor
+                  - generic [ref=e76]: taronger-en-flor
+                - cell "Aromàtiques" [ref=e77]
+                - cell "19,00 €" [ref=e78]
+                - cell "18" [ref=e79]
+                - cell "Actiu Personalitzable" [ref=e80]:
+                  - generic [ref=e81]:
+                    - generic [ref=e82]: Actiu
+                    - generic [ref=e83]: Personalitzable
+                - cell "Editar" [ref=e84]:
+                  - link "Editar" [ref=e85] [cursor=pointer]:
+                    - /url: /ca/admin/products/cmnxon5ex000aui1c2pcx2n3s
+              - row "Vespres de lavanda vespres-de-lavanda Aromàtiques 18,00 € 24 Actiu Personalitzable Editar" [ref=e86]:
+                - cell "Vespres de lavanda vespres-de-lavanda" [ref=e87]:
+                  - generic [ref=e88]: Vespres de lavanda
+                  - generic [ref=e89]: vespres-de-lavanda
+                - cell "Aromàtiques" [ref=e90]
+                - cell "18,00 €" [ref=e91]
+                - cell "24" [ref=e92]
+                - cell "Actiu Personalitzable" [ref=e93]:
+                  - generic [ref=e94]:
+                    - generic [ref=e95]: Actiu
+                    - generic [ref=e96]: Personalitzable
+                - cell "Editar" [ref=e97]:
+                  - link "Editar" [ref=e98] [cursor=pointer]:
+                    - /url: /ca/admin/products/cmnxon5et0008ui1c1b67n2un
+  - contentinfo [ref=e99]:
+    - generic [ref=e100]:
+      - paragraph [ref=e101]: Fetes a mà, una a una.
+      - paragraph [ref=e102]: © 2026 Espelmes — Fet a mà — tots els drets reservats

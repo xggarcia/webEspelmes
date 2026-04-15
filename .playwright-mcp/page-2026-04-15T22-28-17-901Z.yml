@@ -1,0 +1,76 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Espelmes" [ref=e4] [cursor=pointer]:
+        - /url: /ca
+        - generic [ref=e5]: Espelmes
+      - navigation [ref=e6]:
+        - link "Inici" [ref=e7] [cursor=pointer]:
+          - /url: /ca
+        - link "Botiga" [ref=e8] [cursor=pointer]:
+          - /url: /ca/botiga
+        - link "Sobre nosaltres" [ref=e9] [cursor=pointer]:
+          - /url: /ca/sobre-nosaltres
+        - link "Contacte" [ref=e10] [cursor=pointer]:
+          - /url: /ca/contacte
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - button "CA" [pressed] [ref=e13] [cursor=pointer]
+          - button "ES" [ref=e14] [cursor=pointer]
+        - link "Cistell" [ref=e15] [cursor=pointer]:
+          - /url: /ca/cistell
+        - link "Entra" [ref=e16] [cursor=pointer]:
+          - /url: /ca/auth/login
+  - main [ref=e17]:
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - paragraph [ref=e21]: Fetes a mà, una a una.
+          - heading "Cada espelma, una petita història" [level=1] [ref=e22]
+          - paragraph [ref=e23]: Treballem la cera a casa. Escollim les olors i els colors amb calma. Cada espelma surt de les nostres mans — i ara pot sortir amb el teu toc.
+          - generic [ref=e24]:
+            - link "Veure la botiga" [ref=e25] [cursor=pointer]:
+              - /url: /ca/botiga
+            - link "Personalitza la teva" [ref=e26] [cursor=pointer]:
+              - /url: /ca/botiga
+        - img [ref=e30]
+      - generic [ref=e34]:
+        - generic [ref=e35]:
+          - heading "Destacades aquesta setmana" [level=2] [ref=e36]
+          - link "→" [ref=e37] [cursor=pointer]:
+            - /url: /ca/botiga
+        - generic [ref=e38]:
+          - link "Espelma personalitzable Tria forma, color, acabat i etiqueta. 24,00 € Personalitzable" [ref=e39] [cursor=pointer]:
+            - /url: /ca/botiga/espelma-personalitzable
+            - img [ref=e42]
+            - generic [ref=e45]:
+              - generic [ref=e46]:
+                - heading "Espelma personalitzable" [level=3] [ref=e47]
+                - paragraph [ref=e48]: Tria forma, color, acabat i etiqueta.
+              - generic [ref=e49]: 24,00 €
+            - generic [ref=e51]: Personalitzable
+          - link "Pilar rosa pàl·lid Columna clàssica, to terrós i elegant. 22,00 € Personalitzable" [ref=e52] [cursor=pointer]:
+            - /url: /ca/botiga/pilar-rosa-palo
+            - img [ref=e55]
+            - generic [ref=e58]:
+              - generic [ref=e59]:
+                - heading "Pilar rosa pàl·lid" [level=3] [ref=e60]
+                - paragraph [ref=e61]: Columna clàssica, to terrós i elegant.
+              - generic [ref=e62]: 22,00 €
+            - generic [ref=e64]: Personalitzable
+          - link "Taronger en flor Cítric, floral, com una matinada d'abril. 19,00 € Personalitzable" [ref=e65] [cursor=pointer]:
+            - /url: /ca/botiga/taronger-en-flor
+            - img [ref=e68]
+            - generic [ref=e71]:
+              - generic [ref=e72]:
+                - heading "Taronger en flor" [level=3] [ref=e73]
+                - paragraph [ref=e74]: Cítric, floral, com una matinada d'abril.
+              - generic [ref=e75]: 19,00 €
+            - generic [ref=e77]: Personalitzable
+      - generic [ref=e78]:
+        - heading "Fetes amb temps, a foc lent" [level=2] [ref=e79]
+        - paragraph [ref=e80]: Som una família que treballa la cera des de fa molts anys. Quan una espelma neix, ha passat per les nostres mans — i d'aquí és d'on li ve la seva llum.
+  - contentinfo [ref=e81]:
+    - generic [ref=e82]:
+      - paragraph [ref=e83]: Fetes a mà, una a una.
+      - paragraph [ref=e84]: © 2026 Espelmes — Fet a mà — tots els drets reservats

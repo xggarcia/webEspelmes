@@ -14,7 +14,7 @@ async function main() {
   await prisma.user.upsert({
     where: { email: adminEmail },
     create: { email: adminEmail, name: adminName, role: 'ADMIN', passwordHash },
-    update: { role: 'ADMIN', name: adminName },
+    update: { role: 'ADMIN', name: adminName, passwordHash },
   });
 
   // --- Shipping zones (EUR cents) ---

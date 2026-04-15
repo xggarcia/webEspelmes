@@ -10,7 +10,8 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "incremental": false
   },
   "include": ["src/**/*", "test/**/*", "prisma/**/*.ts"]
 }

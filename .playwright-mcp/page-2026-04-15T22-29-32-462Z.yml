@@ -1,0 +1,37 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Espelmes" [ref=e4] [cursor=pointer]:
+        - /url: /ca
+        - generic [ref=e5]: Espelmes
+      - navigation [ref=e6]:
+        - link "Inici" [ref=e7] [cursor=pointer]:
+          - /url: /ca
+        - link "Botiga" [ref=e8] [cursor=pointer]:
+          - /url: /ca/botiga
+        - link "Sobre nosaltres" [ref=e9] [cursor=pointer]:
+          - /url: /ca/sobre-nosaltres
+        - link "Contacte" [ref=e10] [cursor=pointer]:
+          - /url: /ca/contacte
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - button "CA" [pressed] [ref=e13] [cursor=pointer]
+          - button "ES" [ref=e14] [cursor=pointer]
+        - link "Cistell" [ref=e15] [cursor=pointer]:
+          - /url: /ca/cistell
+        - link "Admin" [ref=e16] [cursor=pointer]:
+          - /url: /ca/admin/dashboard
+        - link "El meu compte" [ref=e17] [cursor=pointer]:
+          - /url: /ca/compte
+  - main [ref=e18]:
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - paragraph [ref=e21]: Espelma personalitzable
+        - heading "Personalitza la teva espelma" [level=1] [ref=e22]
+        - paragraph [ref=e23]: Cada canvi es veu a l'instant. Juga amb la forma, el color, l'acabat i posa-li el teu nom.
+      - generic [ref=e24]: Connectant amb la previsualització en viu...
+  - contentinfo [ref=e25]:
+    - generic [ref=e26]:
+      - paragraph [ref=e27]: Fetes a mà, una a una.
+      - paragraph [ref=e28]: © 2026 Espelmes — Fet a mà — tots els drets reservats
+  - alert [ref=e29]

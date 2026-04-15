@@ -41,20 +41,27 @@ export class PricingEngine {
       return opt.values.find((v) => v.code === code);
     };
 
-    const addDelta = (label: string, value: ProductOptionValue | undefined, code: string) => {
+    const addDelta = (
+      kind: ProductOption['kind'],
+      code: string,
+    ) => {
+      // If this product has no option of this kind, silently skip — not an error.
+      const opt = product.options.find((o) => o.kind === kind);
+      if (!opt) return;
+      const value = opt.values.find((v) => v.code === code);
       if (!value) {
-        warnings.push(`Unknown option: ${label} "${code}"`);
+        warnings.push(`Opció desconeguda: ${kind} "${code}"`);
         return;
       }
       if (value.priceDeltaCents !== 0) {
-        breakdown.push({ label: `${label}: ${value.label}`, amountCents: value.priceDeltaCents });
+        breakdown.push({ label: value.label, amountCents: value.priceDeltaCents });
       }
     };
 
-    addDelta('Shape', findValue('shape', state.shape), state.shape);
-    addDelta('Size', findValue('size', state.sizeCode), state.sizeCode);
-    addDelta('Finish', findValue('finish', state.finish), state.finish);
-    addDelta('Platform', findValue('platform', state.platform), state.platform);
+    addDelta('shape', state.shape);
+    addDelta('size', state.sizeCode);
+    addDelta('finish', state.finish);
+    addDelta('platform', state.platform);
 
     const colorOpt = product.options.find((o) => o.kind === 'color');
     if (colorOpt) {

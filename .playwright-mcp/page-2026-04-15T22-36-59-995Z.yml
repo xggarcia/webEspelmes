@@ -1,0 +1,97 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Espelmes" [ref=e4] [cursor=pointer]:
+        - /url: /ca
+        - generic [ref=e5]: Espelmes
+      - navigation [ref=e6]:
+        - link "Inici" [ref=e7] [cursor=pointer]:
+          - /url: /ca
+        - link "Botiga" [ref=e8] [cursor=pointer]:
+          - /url: /ca/botiga
+        - link "Sobre nosaltres" [ref=e9] [cursor=pointer]:
+          - /url: /ca/sobre-nosaltres
+        - link "Contacte" [ref=e10] [cursor=pointer]:
+          - /url: /ca/contacte
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - button "CA" [pressed] [ref=e13] [cursor=pointer]
+          - button "ES" [ref=e14] [cursor=pointer]
+        - link "Cistell" [ref=e15] [cursor=pointer]:
+          - /url: /ca/cistell
+        - link "Admin" [ref=e16] [cursor=pointer]:
+          - /url: /ca/admin/dashboard
+        - link "El meu compte" [ref=e17] [cursor=pointer]:
+          - /url: /ca/compte
+  - main [ref=e18]:
+    - generic [ref=e19]:
+      - generic [ref=e21]:
+        - paragraph [ref=e22]: Admin
+        - heading "Hola, Administradora" [level=1] [ref=e23]
+      - navigation [ref=e24]:
+        - link "Tauler" [ref=e25] [cursor=pointer]:
+          - /url: /ca/admin/dashboard
+        - link "Productes" [ref=e26] [cursor=pointer]:
+          - /url: /ca/admin/products
+        - link "Comandes" [ref=e27] [cursor=pointer]:
+          - /url: /ca/admin/orders
+        - link "Clients" [ref=e28] [cursor=pointer]:
+          - /url: /ca/admin/customers
+        - link "Ordres" [ref=e29] [cursor=pointer]:
+          - /url: /ca/admin/commands
+        - link "Auditoria" [ref=e30] [cursor=pointer]:
+          - /url: /ca/admin/audit
+      - main [ref=e31]:
+        - generic [ref=e32]:
+          - generic [ref=e33]:
+            - generic [ref=e34]:
+              - generic [ref=e35]:
+                - generic [ref=e36]:
+                  - paragraph [ref=e37]: Comanda
+                  - paragraph [ref=e38]: cmnxovj8a00029ar52apl8957
+                - generic [ref=e39]: PENDING
+              - paragraph [ref=e40]: 13/4/2026 23:12:49
+            - generic [ref=e41]:
+              - heading "Articles" [level=3] [ref=e42]
+              - list [ref=e43]:
+                - listitem [ref=e44]:
+                  - generic [ref=e45]:
+                    - generic [ref=e47]: × 2
+                    - generic [ref=e48]: NaN €
+                - listitem [ref=e49]:
+                  - generic [ref=e50]:
+                    - generic [ref=e52]: × 2
+                    - generic [ref=e53]: NaN €
+              - generic [ref=e54]:
+                - generic [ref=e55]:
+                  - generic [ref=e56]: Subtotal
+                  - generic [ref=e57]: 96,00 €
+                - generic [ref=e58]:
+                  - generic [ref=e59]: Enviament
+                  - generic [ref=e60]: 4,90 €
+                - generic [ref=e61]:
+                  - generic [ref=e62]: IVA
+                  - generic [ref=e63]: 16,66 €
+                - generic [ref=e64]:
+                  - generic [ref=e65]: Total
+                  - generic [ref=e66]: 100,90 €
+          - complementary [ref=e67]:
+            - generic [ref=e68]:
+              - heading "Enviament" [level=3] [ref=e69]
+              - generic [ref=e70]:
+                - text: Ada Lovelace
+                - text: Carrer Major 1
+                - text: 08001 Barcelona
+                - text: ES
+              - paragraph [ref=e71]: buyer@example.com
+            - generic [ref=e72]:
+              - heading "Transicions" [level=3] [ref=e73]
+              - generic [ref=e74]:
+                - textbox "Motiu (opcional)" [ref=e75]
+                - generic [ref=e76]:
+                  - button "→ PAID" [ref=e77] [cursor=pointer]
+                  - button "→ CANCELLED" [ref=e78] [cursor=pointer]
+  - contentinfo [ref=e79]:
+    - generic [ref=e80]:
+      - paragraph [ref=e81]: Fetes a mà, una a una.
+      - paragraph [ref=e82]: © 2026 Espelmes — Fet a mà — tots els drets reservats
