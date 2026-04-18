@@ -67,6 +67,10 @@
     "country": "País",
     "notes": "Notas para nosotros (opcional)",
     "pay": "Confirmar pedido",
+    "subtotal": "Subtotal",
+    "shipping": "Envío",
+    "total": "Total",
+    "shippingCalculating": "Calculando…",
     "stripeDev": "Stripe no está configurado en este entorno. El pedido se creará como PENDIENTE y lo podrás ver en tu cuenta.",
     "successTitle": "¡Gracias!",
     "successBody": "Hemos recibido tu pedido y lo preparamos con mucho cariño.",
@@ -85,7 +89,20 @@
     "createOne": "Crea una",
     "loginHere": "Entra aquí",
     "invalidCredentials": "Credenciales incorrectas.",
-    "unexpectedError": "Ha habido un problema. Inténtalo de nuevo."
+    "emailTaken": "Este correo ya tiene una cuenta. Intenta entrar.",
+    "unexpectedError": "Ha habido un problema. Inténtalo de nuevo.",
+    "forgotTitle": "Recuperar contraseña",
+    "forgotLead": "Te enviaremos un enlace para restablecer tu contraseña.",
+    "forgotSubmit": "Enviar enlace",
+    "forgotSent": "Si existe una cuenta con ese correo, en breve recibirás un enlace.",
+    "forgotLink": "¿Olvidaste la contraseña?",
+    "resetTitle": "Nueva contraseña",
+    "resetLead": "Escribe tu nueva contraseña.",
+    "newPassword": "Nueva contraseña",
+    "resetSubmit": "Restablecer contraseña",
+    "resetSuccess": "Contraseña actualizada. Ya puedes entrar.",
+    "resetInvalid": "El enlace no es válido o ha expirado. Solicita uno nuevo.",
+    "backToLogin": "Volver al inicio de sesión"
   },
   "account": {
     "title": "Mi cuenta",
@@ -94,7 +111,21 @@
     "orderNumber": "Pedido",
     "status": "Estado",
     "total": "Total",
-    "placed": "Realizado el"
+    "placed": "Realizado el",
+    "ordersTitle": "Mis pedidos",
+    "profileTitle": "Información personal",
+    "securityTitle": "Seguridad",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "save": "Guardar cambios",
+    "saved": "Cambios guardados.",
+    "emailTaken": "Este correo ya lo usa otra cuenta.",
+    "currentPassword": "Contraseña actual",
+    "newPassword": "Nueva contraseña",
+    "passwordSaved": "Contraseña actualizada. Vuelve a entrar.",
+    "wrongPassword": "La contraseña actual no es correcta.",
+    "error": "Ha habido un problema. Inténtalo de nuevo.",
+    "logout": "Cerrar sesión"
   },
   "about": {
     "title": "Quiénes somos",
@@ -108,7 +139,8 @@
     "email": "Correo",
     "message": "Mensaje",
     "send": "Enviar",
-    "thanks": "¡Gracias! Te contestamos pronto."
+    "thanks": "¡Gracias! Te contestamos pronto.",
+    "error": "Algo ha fallado. Inténtalo de nuevo."
   },
   "configurator": {
     "title": "Personaliza tu vela",

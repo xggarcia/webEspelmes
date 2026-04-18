@@ -24,6 +24,9 @@ const EnvSchema = z.object({
   MAIL_DRIVER: z.enum(['console', 'resend', 'smtp']).default('console'),
   MAIL_FROM: z.string().default('Espelmes <hola@espelmes.local>'),
   RESEND_API_KEY: z.string().optional(),
+  CONTACT_EMAIL: z.string().email().optional(),
+
+  WEB_PUBLIC_URL: z.string().url().default('http://localhost:3000'),
 
   ADMIN_EMAIL: z.string().email().optional(),
   ADMIN_PASSWORD: z.string().optional(),

@@ -15,8 +15,11 @@ import { CurrentUser, type RequestUser } from '../common/decorators/current-user
 import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
 import { OrdersService } from '../orders/orders.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { CartService } from '../cart/cart.service';
 import { StartCheckoutSchema, type StartCheckoutDto } from '../orders/orders.dto';
 import { StripeService } from './stripe.service';
+
+const CART_COOKIE = 'cart_token';
 
 @ApiTags('payments')
 @Controller('payments')
@@ -25,6 +28,7 @@ export class PaymentsController {
     private readonly stripe: StripeService,
     private readonly orders: OrdersService,
     private readonly prisma: PrismaService,
+    private readonly cart: CartService,
   ) {}
 
   @Public()
@@ -32,6 +36,7 @@ export class PaymentsController {
   @Post('checkout')
   async startCheckout(
     @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
     @CurrentUser() user: RequestUser | undefined,
     @Headers('x-cart-token') cartHeader: string | undefined,
     @Body(new ZodValidationPipe(StartCheckoutSchema)) dto: StartCheckoutDto,
@@ -56,6 +61,13 @@ export class PaymentsController {
       ...(dto.billing ? { billing: dto.billing } : {}),
       ...(dto.notes ? { notes: dto.notes } : {}),
     });
+
+    // Clear cart after order is placed
+    const cartCtx = user ? { userId: user.id } : { anonToken };
+    await this.cart.clear(cartCtx);
+    if (!user && anonToken) {
+      res.clearCookie(CART_COOKIE, { path: '/' });
+    }
 
     if (!this.stripe.isConfigured()) {
       return {

@@ -18,6 +18,10 @@ export default async function CheckoutPage({ params }: Props) {
     country: t('country'),
     notes: t('notes'),
     pay: t('pay'),
+    subtotal: t('subtotal'),
+    shipping: t('shipping'),
+    total: t('total'),
+    shippingCalculating: t('shippingCalculating'),
     stripeDev: t('stripeDev'),
   };
 

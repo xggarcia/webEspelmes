@@ -20,6 +20,7 @@ export default async function ContactPage({ params }: Props) {
           message: t('message'),
           send: t('send'),
           thanks: t('thanks'),
+          error: t('error'),
         }}
       />
     </div>

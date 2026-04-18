@@ -7,16 +7,24 @@ import {
 } from '@nestjs/common';
 import * as argon2 from 'argon2';
 import * as crypto from 'node:crypto';
+import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import { TokensService } from './tokens.service';
+import { MailerService } from '../mailer/mailer.service';
 import type { RegisterInput, LoginInput } from '@espelmes/shared';
 
 @Injectable()
 export class AuthService {
+  private readonly webUrl: string;
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly tokens: TokensService,
-  ) {}
+    private readonly mailer: MailerService,
+    config: ConfigService,
+  ) {
+    this.webUrl = config.get<string>('WEB_PUBLIC_URL') ?? 'http://localhost:3000';
+  }
 
   async register(input: RegisterInput) {
     const existing = await this.prisma.user.findUnique({ where: { email: input.email } });
@@ -44,14 +52,22 @@ export class AuthService {
 
   async requestPasswordReset(email: string): Promise<{ token?: string }> {
     const user = await this.prisma.user.findUnique({ where: { email } });
-    if (!user) return {}; // do not leak
+    if (!user) return {}; // do not leak whether the email exists
     const raw = crypto.randomBytes(32).toString('hex');
     const tokenHash = crypto.createHash('sha256').update(raw).digest('hex');
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
     await this.prisma.passwordResetToken.create({
       data: { userId: user.id, tokenHash, expiresAt },
     });
-    // TODO (mailer): send raw token via email. For dev we return it so logs show it.
+    await this.mailer.send({
+      to: user.email,
+      subject: 'Restableix la teva contrasenya — Espelmes',
+      template: 'password.reset',
+      data: {
+        name: user.name,
+        url: `${this.webUrl}/auth/reset?token=${raw}`,
+      },
+    });
     return process.env.NODE_ENV === 'production' ? {} : { token: raw };
   }
 

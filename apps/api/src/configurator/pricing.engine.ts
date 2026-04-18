@@ -86,8 +86,7 @@ export class PricingEngine {
     }
 
     for (const code of state.accessories) {
-      const value = findValue('accessory', code);
-      addDelta('Accessory', value, code);
+      addDelta('accessory', code);
     }
 
     const unitCents = breakdown.reduce((sum, b) => sum + b.amountCents, 0);

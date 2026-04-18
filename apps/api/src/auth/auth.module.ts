@@ -8,6 +8,7 @@ import { TokensService } from './tokens.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 import { UsersModule } from '../users/users.module';
+import { CartModule } from '../cart/cart.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { UsersModule } from '../users/users.module';
       }),
     }),
     UsersModule,
+    CartModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, TokensService, JwtStrategy, JwtRefreshStrategy],

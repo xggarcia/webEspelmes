@@ -67,6 +67,10 @@
     "country": "País",
     "notes": "Notes per a nosaltres (opcional)",
     "pay": "Confirmar comanda",
+    "subtotal": "Subtotal",
+    "shipping": "Enviament",
+    "total": "Total",
+    "shippingCalculating": "Calculant…",
     "stripeDev": "Stripe no està configurat en aquest entorn. La comanda es crearà en estat PENDENT i la podràs veure al teu compte.",
     "successTitle": "Gràcies!",
     "successBody": "Hem rebut la teva comanda i la preparem amb molt de gust.",
@@ -85,7 +89,20 @@
     "createOne": "Crea'n un",
     "loginHere": "Entra aquí",
     "invalidCredentials": "Credencials incorrectes.",
-    "unexpectedError": "Hi ha hagut un problema. Torna-ho a provar."
+    "emailTaken": "Aquest correu ja té un compte. Prova d'entrar.",
+    "unexpectedError": "Hi ha hagut un problema. Torna-ho a provar.",
+    "forgotTitle": "Recuperar contrasenya",
+    "forgotLead": "T'enviarem un link per restablir la teva contrasenya.",
+    "forgotSubmit": "Envia el link",
+    "forgotSent": "Si existeix un compte amb aquest correu, en breu rebràs un link.",
+    "forgotLink": "Has oblidat la contrasenya?",
+    "resetTitle": "Nova contrasenya",
+    "resetLead": "Escriu la teva nova contrasenya.",
+    "newPassword": "Nova contrasenya",
+    "resetSubmit": "Restablir contrasenya",
+    "resetSuccess": "Contrasenya actualitzada. Ja pots entrar.",
+    "resetInvalid": "El link no és vàlid o ha expirat. Sol·licita'n un de nou.",
+    "backToLogin": "Tornar a l'inici de sessió"
   },
   "account": {
     "title": "El meu compte",
@@ -94,7 +111,21 @@
     "orderNumber": "Comanda",
     "status": "Estat",
     "total": "Total",
-    "placed": "Feta el"
+    "placed": "Feta el",
+    "ordersTitle": "Les meves comandes",
+    "profileTitle": "Informació personal",
+    "securityTitle": "Seguretat",
+    "name": "Nom",
+    "email": "Correu electrònic",
+    "save": "Desa els canvis",
+    "saved": "Canvis desats.",
+    "emailTaken": "Aquest correu ja l'utilitza un altre compte.",
+    "currentPassword": "Contrasenya actual",
+    "newPassword": "Nova contrasenya",
+    "passwordSaved": "Contrasenya actualitzada. Torna a entrar.",
+    "wrongPassword": "La contrasenya actual no és correcta.",
+    "error": "Hi ha hagut un problema. Torna-ho a provar.",
+    "logout": "Tanca la sessió"
   },
   "about": {
     "title": "Qui som",
@@ -108,7 +139,8 @@
     "email": "Correu",
     "message": "Missatge",
     "send": "Envia",
-    "thanks": "Gràcies! Et contestem aviat."
+    "thanks": "Gràcies! Et contestem aviat.",
+    "error": "Alguna cosa ha fallat. Torna-ho a provar."
   },
   "configurator": {
     "title": "Personalitza la teva espelma",

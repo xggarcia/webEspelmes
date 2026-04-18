@@ -20,6 +20,7 @@ import { AuditModule } from './audit/audit.module';
 import { CommandsModule } from './commands/commands.module';
 import { AdminModule } from './admin/admin.module';
 import { UploadsModule } from './uploads/uploads.module';
+import { ContactModule } from './contact/contact.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 
@@ -62,6 +63,7 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
     CommandsModule,
     AdminModule,
     UploadsModule,
+    ContactModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

@@ -11,6 +11,7 @@ import {
   type Address,
   type OrderStatus,
 } from '@espelmes/shared';
+import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import { InventoryService } from '../inventory/inventory.service';
 import { MailerService } from '../mailer/mailer.service';
@@ -35,12 +36,16 @@ export type OrderTotals = {
 @Injectable()
 export class OrdersService {
   private readonly logger = new Logger(OrdersService.name);
+  private readonly shopEmail: string;
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly inventory: InventoryService,
     private readonly mailer: MailerService,
-  ) {}
+    config: ConfigService,
+  ) {
+    this.shopEmail = config.get<string>('CONTACT_EMAIL') ?? config.get<string>('ADMIN_EMAIL') ?? '';
+  }
 
   /**
    * Create a PENDING order from the current cart contents. Uses a transaction
@@ -207,7 +212,10 @@ export class OrdersService {
   }
 
   async notifyStatusChange(orderId: string, status: OrderStatus): Promise<void> {
-    const order = await this.prisma.order.findUnique({ where: { id: orderId } });
+    const order = await this.prisma.order.findUnique({
+      where: { id: orderId },
+      include: { items: true },
+    });
     if (!order) return;
     const template =
       status === 'PAID'
@@ -218,12 +226,57 @@ export class OrdersService {
             ? 'order.cancelled'
             : null;
     if (!template) return;
-    await this.mailer.send({
-      to: order.email,
-      subject: `Espelmes — Comanda ${order.number}`,
-      template,
-      data: { orderNumber: order.number, totalCents: order.totalCents },
-    });
+
+    const subject =
+      status === 'PAID'
+        ? `Comanda confirmada — ${order.number}`
+        : status === 'SHIPPED'
+          ? `La teva comanda ${order.number} és en camí!`
+          : `Comanda cancel·lada — ${order.number}`;
+
+    const data = {
+      orderNumber: order.number,
+      totalCents: order.totalCents,
+      subtotalCents: order.subtotalCents,
+      shippingCents: order.shippingCents,
+      items: order.items.map((i) => ({
+        name: i.name,
+        quantity: i.quantity,
+        unitPriceCents: i.unitPriceCents,
+      })),
+    };
+
+    // Customer notification
+    try {
+      await this.mailer.send({ to: order.email, subject: `Espelmes — ${subject}`, template, data });
+    } catch (e) {
+      this.logger.error(`[orders] Failed to send customer email for order ${order.number}: ${e}`);
+    }
+
+    // Shop owner notification on new paid orders
+    if (status === 'PAID' && this.shopEmail) {
+      const addr = order.shippingAddress as Record<string, string> | null;
+      const shippingAddress = addr
+        ? [addr['fullName'], addr['street'], `${addr['postalCode']} ${addr['city']}`, addr['country']]
+            .filter(Boolean)
+            .join(', ')
+        : null;
+      try {
+        await this.mailer.send({
+          to: this.shopEmail,
+          subject: `Nova comanda — ${order.number} (${(order.totalCents / 100).toFixed(2)} €)`,
+          template: 'order.new-notification',
+          data: { ...data, customerEmail: order.email, shippingAddress },
+        });
+      } catch (e) {
+        this.logger.error(`[orders] Failed to send shop email for order ${order.number}: ${e}`);
+      }
+    }
+  }
+
+  async getShippingEstimate(postalCode: string): Promise<{ shippingCents: number }> {
+    const zone = await this.resolveShipping({ postalCode } as Address);
+    return { shippingCents: zone?.priceCents ?? 0 };
   }
 
   private async resolveShipping(address: Address) {

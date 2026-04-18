@@ -26,6 +26,9 @@ import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
 import { JwtRefreshGuard } from '../common/guards/jwt-refresh.guard';
 import { AuthService } from './auth.service';
 import { TokensService } from './tokens.service';
+import { CartService } from '../cart/cart.service';
+
+const CART_COOKIE = 'cart_token';
 
 function cookieOpts() {
   const secure = process.env.COOKIE_SECURE === 'true';
@@ -44,6 +47,7 @@ export class AuthController {
   constructor(
     private readonly auth: AuthService,
     private readonly tokens: TokensService,
+    private readonly cart: CartService,
   ) {}
 
   @Public()
@@ -99,6 +103,7 @@ export class AuthController {
     if (token) await this.tokens.revokeByToken(token);
     res.clearCookie('access_token', cookieOpts());
     res.clearCookie('refresh_token', cookieOpts());
+    res.clearCookie(CART_COOKIE, { path: '/' });
   }
 
   @Public()
@@ -130,6 +135,13 @@ export class AuthController {
     const ip = (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress || '';
     const access = this.tokens.signAccess({ sub: user.id, email: user.email, role: user.role });
     const refresh = await this.tokens.issueRefreshToken(user.id, null, ua, ip);
+
+    // Merge any anonymous cart items into the user's cart, then drop the anon cookie
+    const anonToken = (req.cookies as Record<string, string> | undefined)?.[CART_COOKIE];
+    if (anonToken) {
+      await this.cart.merge(user.id, anonToken);
+      res.clearCookie(CART_COOKIE, { path: '/' });
+    }
 
     res.cookie('access_token', access.token, { ...cookieOpts(), maxAge: access.expiresAt.getTime() - Date.now() });
     res.cookie('refresh_token', refresh.token, { ...cookieOpts(), maxAge: refresh.expiresAt.getTime() - Date.now() });

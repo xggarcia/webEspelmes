@@ -10,6 +10,7 @@ type Labels = {
   password: string;
   submit: string;
   invalid: string;
+  emailTaken?: string;
   unexpected: string;
 };
 
@@ -35,7 +36,9 @@ export function AuthForm({ mode, labels }: { mode: 'login' | 'register'; labels:
         body: JSON.stringify(body),
       });
       if (!res.ok) {
-        setErr(res.status === 401 ? labels.invalid : labels.unexpected);
+        if (res.status === 401) setErr(labels.invalid);
+        else if (res.status === 409 && labels.emailTaken) setErr(labels.emailTaken);
+        else setErr(labels.unexpected);
         return;
       }
       router.push('/compte');
