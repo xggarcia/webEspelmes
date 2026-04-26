@@ -1,11 +1,11 @@
-import { describe, it, expect } from 'vitest';
+﻿import { describe, it, expect } from 'vitest';
 import { formatEur } from './currency';
 
 describe('formatEur', () => {
   it('formats cents as euros in Catalan locale by default', () => {
     const out = formatEur(2640);
     expect(out).toContain('26,40');
-    expect(out).toContain('€');
+    expect(out).toContain('â‚¬');
   });
 
   it('formats zero with two decimals', () => {
@@ -15,14 +15,14 @@ describe('formatEur', () => {
 
   it('formats negative amounts', () => {
     const out = formatEur(-1500);
-    expect(out).toMatch(/-|−/);
+    expect(out).toMatch(/-|âˆ’/);
     expect(out).toContain('15,00');
   });
 
   it('respects an explicit Spanish locale', () => {
     const out = formatEur(199999, 'es-ES');
     expect(out).toContain('1999,99');
-    expect(out).toContain('€');
+    expect(out).toContain('â‚¬');
   });
 
   it('rounds fractional cents using banker-style Intl rounding', () => {
@@ -30,3 +30,4 @@ describe('formatEur', () => {
     expect(formatEur(99)).toContain('0,99');
   });
 });
+

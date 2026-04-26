@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 export function FinishSelect({
   label,
@@ -33,7 +33,7 @@ export function FinishSelect({
               <span className="font-medium">{o.label || tNamespace(o.code)}</span>
               {o.deltaCents !== 0 && (
                 <span className="ml-2 text-xs text-ink/50">
-                  {o.deltaCents > 0 ? '+' : ''}{(o.deltaCents / 100).toFixed(2)}€
+                  {o.deltaCents > 0 ? '+' : ''}{(o.deltaCents / 100).toFixed(2)}â‚¬
                 </span>
               )}
             </button>
@@ -43,3 +43,4 @@ export function FinishSelect({
     </div>
   );
 }
+

@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { safeApiFetch } from '@/lib/api-server';
+import { adminFetch as safeApiFetch } from '@/lib/api-admin';
 import { formatEur } from '@/lib/currency';
 import { OrderStatusControl } from '@/components/admin/OrderStatusControl';
 
@@ -32,7 +32,7 @@ export default async function AdminOrderDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const order = await safeApiFetch<OrderDetail>(`/orders/${id}`, { forwardCookies: true });
+  const order = await safeApiFetch<OrderDetail>(`/orders/${id}`);
   if (!order) notFound();
 
   const addr = order.shippingAddress;
@@ -40,7 +40,7 @@ export default async function AdminOrderDetailPage({
   return (
     <div className="grid gap-6 md:grid-cols-[2fr_1fr]">
       <div className="space-y-4">
-        <div className="card-warm">
+        <div className="card p-5">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs uppercase tracking-widest text-ink/50">Comanda</p>
@@ -53,7 +53,7 @@ export default async function AdminOrderDetailPage({
           </p>
         </div>
 
-        <div className="card-warm space-y-2">
+        <div className="card p-5 space-y-2">
           <h3 className="font-display text-lg text-ink">Articles</h3>
           <ul className="divide-y divide-ink/10">
             {order.items.map((it) => (
@@ -87,7 +87,7 @@ export default async function AdminOrderDetailPage({
       </div>
 
       <aside className="space-y-4">
-        <div className="card-warm space-y-2">
+        <div className="card p-5 space-y-2">
           <h3 className="font-display text-lg text-ink">Enviament</h3>
           {addr ? (
             <address className="not-italic text-sm text-ink/80">
@@ -106,7 +106,7 @@ export default async function AdminOrderDetailPage({
           {order.notes && <p className="text-xs italic text-ink/60">«{order.notes}»</p>}
         </div>
 
-        <div className="card-warm space-y-2">
+        <div className="card p-5 space-y-2">
           <h3 className="font-display text-lg text-ink">Transicions</h3>
           <OrderStatusControl id={order.id} current={order.status} />
         </div>

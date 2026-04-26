@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
@@ -253,7 +253,7 @@ export function ConfiguratorRoot({
           />
         )}
 
-        <div className="card-warm space-y-4">
+        <div className="card p-5 space-y-4">
           <div className="flex items-baseline justify-between">
             <span className="text-ink/70">{t('unitPrice')}</span>
             <span className="font-display text-xl text-ember">
@@ -307,7 +307,7 @@ export function ConfiguratorRoot({
             disabled={adding || !availability?.inStock}
             className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {adding ? '…' : t('addToCart')}
+            {adding ? 'â€¦' : t('addToCart')}
           </button>
         </div>
       </div>
@@ -371,3 +371,4 @@ function buildOptionIndex(p: ProductDetail): OptionIndex {
   }
   return out;
 }
+

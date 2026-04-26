@@ -1,32 +1,107 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   html {
     font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    color-scheme: light;
   }
   body {
-    @apply bg-cream text-ink antialiased;
+    @apply bg-bone text-ink antialiased;
+    font-feature-settings: 'ss01', 'cv11';
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display), Georgia, serif;
     @apply tracking-tight;
+    font-optical-sizing: auto;
   }
   a { @apply underline-offset-4; }
+  ::selection { background: #B0532A; color: #FBF8F2; }
 }
 
 @layer components {
   .container-lux {
-    @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
+    @apply mx-auto w-full max-w-[1240px] px-5 sm:px-8;
   }
+  .container-tight {
+    @apply mx-auto w-full max-w-5xl px-5 sm:px-8;
+  }
+
+  /* Buttons */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl2 bg-ember px-6 py-3 font-medium text-cream shadow-warm transition hover:bg-ember/90;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-ink px-6 py-3 font-medium text-bone transition;
+    @apply hover:bg-ember focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember focus-visible:ring-offset-2 focus-visible:ring-offset-bone;
+  }
+  .btn-ember {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-ember px-6 py-3 font-medium text-bone transition hover:bg-clay;
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl2 border border-ink/10 bg-transparent px-5 py-2.5 text-ink hover:bg-wax/60;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-ink/15 bg-transparent px-5 py-2.5 text-ink transition hover:border-ink/40 hover:bg-hush;
   }
-  .card-warm {
-    @apply rounded-xl2 border border-ink/5 bg-linen/80 p-5 shadow-warm;
+  .btn-link {
+    @apply inline-flex items-center gap-1 text-sm text-ink/70 transition hover:text-ember;
+  }
+
+  /* Cards */
+  .card {
+    @apply rounded-2xl border border-ink/[0.07] bg-bone shadow-warm;
+  }
+  .card-flat {
+    @apply rounded-2xl border border-ink/[0.06] bg-hush/40;
+  }
+
+  /* Type utilities */
+  .eyebrow {
+    @apply text-[11px] font-medium uppercase tracking-widest2 text-ember;
+  }
+  .meta {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    @apply text-[11px] uppercase tracking-widest2 text-ink/55;
+  }
+  .num {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Form */
+  .field {
+    @apply mt-1 w-full rounded-xl border border-ink/15 bg-bone px-3.5 py-2.5 text-ink outline-none transition;
+    @apply focus:border-ember focus:ring-2 focus:ring-ember/15;
+  }
+  .field-label {
+    @apply text-xs font-medium uppercase tracking-widest2 text-ink/55;
+  }
+
+  /* Hover lift for editorial cards */
+  .lift-on-hover {
+    @apply transition duration-300;
+  }
+  .lift-on-hover:hover {
+    transform: translateY(-3px);
+  }
+
+  /* Placeholder image (striped, monospaced label) */
+  .ph-stripes {
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(31, 27, 22, 0.04) 0 1px,
+      transparent 1px 14px
+    );
   }
 }
+
+@layer utilities {
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 700ms cubic-bezier(.2,.7,.2,1), transform 700ms cubic-bezier(.2,.7,.2,1);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  .text-balance { text-wrap: balance; }
+  .text-pretty  { text-wrap: pretty; }
+}
+

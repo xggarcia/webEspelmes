@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 export function ShapeSelect({
   label,
@@ -33,7 +33,7 @@ export function ShapeSelect({
               <span className="font-medium">{o.label || tNamespace(o.code)}</span>
               {o.deltaCents !== 0 && (
                 <span className="ml-2 text-xs opacity-60">
-                  {o.deltaCents > 0 ? '+' : ''}{(o.deltaCents / 100).toFixed(2)}€
+                  {o.deltaCents > 0 ? '+' : ''}{(o.deltaCents / 100).toFixed(2)}â‚¬
                 </span>
               )}
             </button>
@@ -43,3 +43,4 @@ export function ShapeSelect({
     </div>
   );
 }
+

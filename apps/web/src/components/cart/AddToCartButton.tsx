@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useTransition } from 'react';
 import { useRouter } from '@/i18n/routing';
@@ -43,9 +43,10 @@ export function AddToCartButton({
         disabled={disabled || pending}
         className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {pending ? '…' : label}
+        {pending ? 'â€¦' : label}
       </button>
       {err && <p className="text-xs text-ember">{err}</p>}
     </div>
   );
 }
+

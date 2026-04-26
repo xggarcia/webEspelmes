@@ -1,4 +1,4 @@
-import { cookies } from 'next/headers';
+﻿import { cookies } from 'next/headers';
 import { safeApiFetch } from './api-server';
 
 export type Session = {
@@ -13,3 +13,4 @@ export async function getSession(): Promise<Session | null> {
   if (!jar.get('access_token')) return null;
   return await safeApiFetch<Session>('/auth/me', { forwardCookies: true });
 }
+

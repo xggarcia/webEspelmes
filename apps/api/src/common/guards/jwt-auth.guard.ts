@@ -10,6 +10,17 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
 
   override async canActivate(context: ExecutionContext): Promise<boolean> {
+    const req = context.switchToHttp().getRequest();
+
+    // Admin token header bypass — lets the Next.js server call admin API
+    // routes without a user JWT session.
+    const adminToken = req.headers['x-admin-token'] as string | undefined;
+    const expectedToken = process.env.ADMIN_TOKEN;
+    if (adminToken && expectedToken && adminToken === expectedToken) {
+      req.user = { id: 'admin-token', email: 'admin@internal', role: 'ADMIN' };
+      return true;
+    }
+
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),

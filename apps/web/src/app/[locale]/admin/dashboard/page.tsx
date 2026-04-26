@@ -1,4 +1,4 @@
-import { safeApiFetch } from '@/lib/api-server';
+import { adminFetch as safeApiFetch } from '@/lib/api-admin';
 import { formatEur } from '@/lib/currency';
 import { Link } from '@/i18n/routing';
 
@@ -9,7 +9,7 @@ type Dashboard = {
 };
 
 export default async function DashboardPage() {
-  const data = await safeApiFetch<Dashboard>('/admin/dashboard', { forwardCookies: true });
+  const data = await safeApiFetch<Dashboard>('/admin/dashboard');
   if (!data) {
     return <p className="text-ember">No s&apos;han pogut carregar les mètriques.</p>;
   }
@@ -27,14 +27,14 @@ export default async function DashboardPage() {
     <div className="space-y-6">
       <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {kpis.map((k) => (
-          <div key={k.label} className="card-warm">
+          <div key={k.label} className="card p-5">
             <p className="text-xs uppercase tracking-widest text-ink/50">{k.label}</p>
             <p className="mt-1 font-display text-2xl text-ember">{k.value}</p>
           </div>
         ))}
       </section>
 
-      <section className="card-warm">
+      <section className="card p-5">
         <h2 className="font-display text-xl text-ink">Estoc baix</h2>
         {data.lowStock.length === 0 ? (
           <p className="mt-2 text-sm text-ink/60">Tot correcte — cap producte per sota del llindar.</p>

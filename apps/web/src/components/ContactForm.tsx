@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { API_BASE } from '@/lib/api';
@@ -19,7 +19,7 @@ export function ContactForm({ labels }: { labels: Labels }) {
   const [err, setErr] = useState<string | null>(null);
 
   if (sent) {
-    return <p className="card-warm text-sage">{labels.thanks}</p>;
+    return <p className="card p-5 text-sage">{labels.thanks}</p>;
   }
 
   const inputCls =
@@ -45,7 +45,7 @@ export function ContactForm({ labels }: { labels: Labels }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="card-warm space-y-4">
+    <form onSubmit={handleSubmit} className="card p-5 space-y-4">
       <label className="block text-sm">
         <span className="text-ink/70">{labels.name}</span>
         <input
@@ -77,8 +77,9 @@ export function ContactForm({ labels }: { labels: Labels }) {
       </label>
       {err && <p className="text-sm text-ember">{err}</p>}
       <button type="submit" disabled={loading} className="btn-primary w-full disabled:opacity-60">
-        {loading ? '…' : labels.send}
+        {loading ? 'â€¦' : labels.send}
       </button>
     </form>
   );
 }
+

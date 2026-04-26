@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { useRouter } from '@/i18n/routing';
@@ -29,9 +29,8 @@ export function OrderStatusControl({ id, current }: { id: string; current: strin
     setBusy(true);
     setErr(null);
     try {
-      const res = await fetch(`${API_BASE}/orders/${id}/status`, {
+      const res = await fetch(`/api/admin-proxy/orders/${id}/status`, {
         method: 'PATCH',
-        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: next, reason: reason || undefined }),
       });
@@ -62,7 +61,7 @@ export function OrderStatusControl({ id, current }: { id: string; current: strin
             onClick={() => go(s)}
             className="rounded-md bg-ink px-3 py-1.5 text-sm text-cream hover:bg-ember disabled:opacity-50"
           >
-            → {s}
+            â†’ {s}
           </button>
         ))}
       </div>
@@ -70,3 +69,4 @@ export function OrderStatusControl({ id, current }: { id: string; current: strin
     </div>
   );
 }
+

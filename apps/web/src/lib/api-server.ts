@@ -1,4 +1,4 @@
-import 'server-only';
+﻿import 'server-only';
 import { cookies } from 'next/headers';
 import { API_BASE, ApiError } from './api';
 
@@ -41,3 +41,4 @@ export async function safeApiFetch<T>(
     return null;
   }
 }
+

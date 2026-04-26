@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useTransition } from 'react';
 import { useRouter } from '@/i18n/routing';
@@ -35,9 +35,9 @@ export function CartItemControls({
         onClick={() => call('PATCH', { quantity: Math.max(1, quantity - 1) })}
         disabled={pending || quantity <= 1}
         className="h-7 w-7 rounded-md border border-ink/10 hover:bg-wax/60 disabled:opacity-40"
-        aria-label="−"
+        aria-label="âˆ’"
       >
-        −
+        âˆ’
       </button>
       <span className="w-6 text-center">{quantity}</span>
       <button
@@ -60,3 +60,4 @@ export function CartItemControls({
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
@@ -144,3 +144,4 @@ export function LivePreview3D({
     </div>
   );
 }
+

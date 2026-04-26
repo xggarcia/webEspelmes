@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 export function Accessories({
   label,
@@ -35,7 +35,7 @@ export function Accessories({
             >
               <span className="font-medium">{o.label}</span>
               {o.deltaCents > 0 && (
-                <span className="ml-2 text-xs text-ink/50">+{(o.deltaCents / 100).toFixed(2)}€</span>
+                <span className="ml-2 text-xs text-ink/50">+{(o.deltaCents / 100).toFixed(2)}â‚¬</span>
               )}
             </button>
           );
@@ -44,3 +44,4 @@ export function Accessories({
     </div>
   );
 }
+

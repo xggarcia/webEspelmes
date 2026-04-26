@@ -1,4 +1,4 @@
-import { safeApiFetch } from '@/lib/api-server';
+import { adminFetch as safeApiFetch } from '@/lib/api-admin';
 import { CommandRunner } from '@/components/admin/CommandRunner';
 
 type Listing = { commands: string[] };
@@ -16,8 +16,8 @@ type Run = {
 
 export default async function AdminCommandsPage() {
   const [listing, history] = await Promise.all([
-    safeApiFetch<Listing>('/admin/commands', { forwardCookies: true }),
-    safeApiFetch<Run[]>('/admin/commands/history?limit=50', { forwardCookies: true }),
+    safeApiFetch<Listing>('/admin/commands'),
+    safeApiFetch<Run[]>('/admin/commands/history?limit=50'),
   ]);
 
   return (

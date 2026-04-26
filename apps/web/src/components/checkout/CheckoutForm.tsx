@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from '@/i18n/routing';
@@ -107,7 +107,7 @@ export function CheckoutForm({ defaultEmail, cartSubtotalCents, labels }: {
     'mt-1 w-full rounded-md border border-ink/15 bg-cream px-3 py-2 text-ink outline-none focus:border-ember';
 
   return (
-    <form onSubmit={submit} className="card-warm space-y-4">
+    <form onSubmit={submit} className="card p-5 space-y-4">
       <label className="block text-sm">
         <span className="text-ink/70">{labels.email}</span>
         <input type="email" required value={form.email}
@@ -162,7 +162,7 @@ export function CheckoutForm({ defaultEmail, cartSubtotalCents, labels }: {
                 ? labels.shippingCalculating
                 : shippingCents !== null
                   ? fmt(shippingCents)
-                  : '—'}
+                  : 'â€”'}
             </span>
           </div>
           {cartSubtotalCents !== undefined && shippingCents !== null && (
@@ -177,8 +177,9 @@ export function CheckoutForm({ defaultEmail, cartSubtotalCents, labels }: {
       {info && <p className="text-sm text-sage">{info}</p>}
       {err && <p className="text-sm text-ember">{err}</p>}
       <button type="submit" disabled={loading} className="btn-primary w-full disabled:opacity-50">
-        {loading ? '…' : labels.pay}
+        {loading ? 'â€¦' : labels.pay}
       </button>
     </form>
   );
 }
+

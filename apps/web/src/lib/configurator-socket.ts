@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { io, type Socket } from 'socket.io-client';
 import { API_BASE } from './api';
@@ -32,3 +32,4 @@ export function disposeConfiguratorSocket(): void {
   cached?.disconnect();
   cached = null;
 }
+

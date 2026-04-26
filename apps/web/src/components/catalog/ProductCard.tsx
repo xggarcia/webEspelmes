@@ -1,56 +1,57 @@
-import type { ProductSummary } from '@espelmes/shared';
+﻿import type { ProductSummary } from '@espelmes/shared';
 import { Link } from '@/i18n/routing';
 import { formatEur } from '@/lib/currency';
 import { getLocale, getTranslations } from 'next-intl/server';
+import { Placeholder } from '@/components/ui/Placeholder';
 
 export async function ProductCard({ product }: { product: ProductSummary }) {
   const locale = await getLocale();
   const t = await getTranslations('catalog');
   const tp = await getTranslations('product');
+  // Click goes directly to the configurator â€” no detail page intermediate.
+  const href = `/personalitza/${product.slug}`;
   return (
     <Link
-      href={`/botiga/${product.slug}`}
-      className="card-warm group block no-underline transition hover:-translate-y-0.5 hover:shadow-lg"
+      href={href}
+      className="group block no-underline lift-on-hover"
     >
-      <div className="mb-3 aspect-[4/5] w-full overflow-hidden rounded-xl2 bg-wax/40">
+      <div className="relative mb-4 aspect-[4/5] w-full overflow-hidden rounded-2xl border border-ink/[0.06] bg-hush/50">
         {product.heroImageUrl ? (
           /* eslint-disable-next-line @next/next/no-img-element */
           <img
             src={product.heroImageUrl}
             alt={product.name}
-            className="h-full w-full object-cover transition group-hover:scale-[1.02]"
+            className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-ember/40">
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M12 3c-1.5 2-3 3.5-3 5.5A3 3 0 0 0 12 11.5 3 3 0 0 0 15 8.5C15 6.5 13.5 5 12 3z"
-                fill="currentColor"
-              />
-              <rect x="9" y="12" width="6" height="8" rx="1" fill="currentColor" opacity="0.6" />
-            </svg>
-          </div>
+          <Placeholder
+            label={`${product.name.toLowerCase()}`}
+            tone="hush"
+          />
+        )}
+        {product.isCustomizable && (
+          <span className="absolute left-3 top-3 rounded-full bg-bone/90 px-2.5 py-1 meta text-ink/70 backdrop-blur">
+            {t('personalize')}
+          </span>
+        )}
+        {!product.inStock && (
+          <span className="absolute right-3 top-3 rounded-full bg-ink/85 px-2.5 py-1 meta text-bone">
+            {tp('outOfStock')}
+          </span>
         )}
       </div>
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h3 className="font-display text-lg text-ink">{product.name}</h3>
-          {product.shortDescription && (
-            <p className="mt-0.5 line-clamp-2 text-sm text-ink/60">{product.shortDescription}</p>
-          )}
-        </div>
-        <span className="whitespace-nowrap text-sm font-medium text-ember">
+      <div className="flex items-baseline justify-between gap-3 px-1">
+        <h3 className="font-display text-[19px] leading-tight text-ink group-hover:text-ember transition-colors">
+          {product.name}
+        </h3>
+        <span className="num whitespace-nowrap text-sm text-ink/80">
           {formatEur(product.basePriceCents, locale === 'es' ? 'es-ES' : 'ca-ES')}
         </span>
       </div>
-      <div className="mt-3 flex items-center gap-2 text-xs">
-        {product.isCustomizable && (
-          <span className="rounded-full bg-sage/20 px-2 py-0.5 text-sage">{t('personalize')}</span>
-        )}
-        {!product.inStock && (
-          <span className="rounded-full bg-ink/10 px-2 py-0.5 text-ink/60">{tp('outOfStock')}</span>
-        )}
-      </div>
+      {product.shortDescription && (
+        <p className="mt-1 line-clamp-1 px-1 text-sm text-ink/55">{product.shortDescription}</p>
+      )}
     </Link>
   );
 }
+

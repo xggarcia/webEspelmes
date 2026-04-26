@@ -1,11 +1,11 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useRef } from 'react';
 import type { ConfiguratorState } from '@espelmes/shared';
 
 /**
  * Canvas-based MVP preview. Intentionally render-agnostic consumption of
- * ConfiguratorState — the same state will drive the future R3F 3D viewer.
+ * ConfiguratorState â€” the same state will drive the future R3F 3D viewer.
  */
 export function LivePreview2D({ state }: { state: ConfiguratorState | null }) {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -290,3 +290,4 @@ function darken(hex: string, amt: number) {
   const [r, g, b] = hexToRgb(hex);
   return rgb(r * (1 - amt), g * (1 - amt), b * (1 - amt));
 }
+

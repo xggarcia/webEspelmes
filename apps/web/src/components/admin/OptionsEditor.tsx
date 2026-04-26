@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { API_BASE } from '@/lib/api';
@@ -37,7 +37,7 @@ const inputCls =
   'w-full rounded-md border border-ink/15 bg-cream px-3 py-2 text-sm text-ink focus:border-ember focus:outline-none';
 
 async function apiFetch(url: string, options: RequestInit) {
-  const res = await fetch(url, { credentials: 'include', ...options });
+  const res = await fetch(url, {  ...options });
   if (!res.ok && res.status !== 204) throw new Error(await res.text());
   if (res.status === 204) return null;
   return res.json();
@@ -53,7 +53,7 @@ export function OptionsEditor({
   const [options, setOptions] = useState<Option[]>(initial);
   const [err, setErr] = useState<string | null>(null);
 
-  // ── Add option group ────────────────────────────────────────────────────────
+  // â”€â”€ Add option group â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const [newKind, setNewKind] = useState<OptionKind>('color');
   const [newLabel, setNewLabel] = useState('');
   const [addingGroup, setAddingGroup] = useState(false);
@@ -62,7 +62,7 @@ export function OptionsEditor({
     setErr(null);
     setAddingGroup(true);
     try {
-      const opt = await apiFetch(`${API_BASE}/admin/products/${productId}/options`, {
+      const opt = await apiFetch(`/api/admin-proxy/admin/products/${productId}/options`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ kind: newKind, label: newLabel || OPTION_KINDS.find(k => k.value === newKind)!.label }),
@@ -80,7 +80,7 @@ export function OptionsEditor({
     if (!confirm('Eliminar aquest grup d\'opcions i tots els seus valors?')) return;
     setErr(null);
     try {
-      await apiFetch(`${API_BASE}/admin/products/${productId}/options/${optionId}`, { method: 'DELETE' });
+      await apiFetch(`/api/admin-proxy/admin/products/${productId}/options/${optionId}`, { method: 'DELETE' });
       setOptions((prev) => prev.filter((o) => o.id !== optionId));
     } catch (e) {
       setErr(e instanceof Error ? e.message : 'Error');
@@ -91,7 +91,7 @@ export function OptionsEditor({
     setErr(null);
     try {
       const val = await apiFetch(
-        `${API_BASE}/admin/products/${productId}/options/${optionId}/values`,
+        `/api/admin-proxy/admin/products/${productId}/options/${optionId}/values`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -110,7 +110,7 @@ export function OptionsEditor({
     setErr(null);
     try {
       await apiFetch(
-        `${API_BASE}/admin/products/${productId}/options/${optionId}/values/${valueId}`,
+        `/api/admin-proxy/admin/products/${productId}/options/${optionId}/values/${valueId}`,
         { method: 'DELETE' },
       );
       setOptions((prev) =>
@@ -126,7 +126,7 @@ export function OptionsEditor({
   return (
     <div className="space-y-6">
       <h3 className="text-xs font-medium uppercase tracking-wider text-ink/60">
-        Opcions de personalització
+        Opcions de personalitzaciÃ³
       </h3>
 
       {options.map((opt) => (
@@ -175,7 +175,7 @@ export function OptionsEditor({
           disabled={addingGroup}
           className="btn-primary disabled:opacity-50"
         >
-          {addingGroup ? '…' : 'Afegir grup'}
+          {addingGroup ? 'â€¦' : 'Afegir grup'}
         </button>
       </fieldset>
 
@@ -184,7 +184,7 @@ export function OptionsEditor({
   );
 }
 
-// ── Single option group ───────────────────────────────────────────────────────
+// â”€â”€ Single option group â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function OptionGroup({
   option,
@@ -258,14 +258,14 @@ function OptionGroup({
               <span className="text-xs text-ink/50">
                 {v.priceDeltaCents === 0
                   ? 'sense cost extra'
-                  : `${v.priceDeltaCents > 0 ? '+' : ''}${(v.priceDeltaCents / 100).toFixed(2)} €`}
+                  : `${v.priceDeltaCents > 0 ? '+' : ''}${(v.priceDeltaCents / 100).toFixed(2)} â‚¬`}
               </span>
               <button
                 type="button"
                 onClick={() => onRemoveValue(v.id)}
                 className="text-ember/60 hover:text-ember"
               >
-                ✕
+                âœ•
               </button>
             </li>
           ))}
@@ -293,7 +293,7 @@ function OptionGroup({
           />
         </label>
         <label className="block space-y-1">
-          <span className="text-xs text-ink/50">Cost extra (€)</span>
+          <span className="text-xs text-ink/50">Cost extra (â‚¬)</span>
           <input
             type="number"
             step="0.01"
@@ -320,8 +320,9 @@ function OptionGroup({
         disabled={busy || !code || !label}
         className="btn-ghost text-sm disabled:opacity-40"
       >
-        {busy ? '…' : '+ Afegir valor'}
+        {busy ? 'â€¦' : '+ Afegir valor'}
       </button>
     </fieldset>
   );
 }
+

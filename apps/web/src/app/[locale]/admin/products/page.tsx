@@ -1,4 +1,4 @@
-import { safeApiFetch } from '@/lib/api-server';
+import { adminFetch as safeApiFetch } from '@/lib/api-admin';
 import { formatEur } from '@/lib/currency';
 import { Link } from '@/i18n/routing';
 
@@ -14,7 +14,7 @@ type AdminProduct = {
 };
 
 export default async function AdminProductsPage() {
-  const products = await safeApiFetch<AdminProduct[]>('/admin/products', { forwardCookies: true });
+  const products = await safeApiFetch<AdminProduct[]>('/admin/products');
   if (!products) return <p className="text-ember">Error carregant productes.</p>;
 
   return (

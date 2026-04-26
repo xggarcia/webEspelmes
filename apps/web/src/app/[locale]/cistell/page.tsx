@@ -34,10 +34,10 @@ export default async function CartPage({ params }: Props) {
   const format = (n: number) => formatEur(n, loc === 'es' ? 'es-ES' : 'ca-ES');
 
   return (
-    <div className="space-y-6">
+    <div className="container-lux py-12 space-y-6">
       <h1 className="font-display text-4xl text-ink">{t('title')}</h1>
       {!cart || cart.items.length === 0 ? (
-        <div className="card-warm flex flex-col items-start gap-4">
+        <div className="card flex flex-col items-start gap-4 p-8">
           <p className="text-ink/70">{t('empty')}</p>
           <Link href="/botiga" className="btn-primary no-underline">
             {t('goShop')}
@@ -47,10 +47,10 @@ export default async function CartPage({ params }: Props) {
         <div className="grid gap-8 md:grid-cols-[1.4fr_1fr] md:items-start">
           <ul className="space-y-3">
             {cart.items.map((item) => (
-              <li key={item.id} className="card-warm flex items-center justify-between gap-4">
+              <li key={item.id} className="card flex items-center justify-between gap-4 p-5">
                 <div>
                   <Link
-                    href={`/botiga/${item.productSlug}`}
+                    href={`/personalitza/${item.productSlug}`}
                     className="no-underline font-display text-lg text-ink hover:text-ember"
                   >
                     {item.productName || item.productId}
@@ -60,16 +60,16 @@ export default async function CartPage({ params }: Props) {
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="font-medium text-ember">{format(item.lineTotalCents)}</span>
+                  <span className="num font-medium text-ember">{format(item.lineTotalCents)}</span>
                   <CartItemControls itemId={item.id} quantity={item.quantity} removeLabel={t('remove')} />
                 </div>
               </li>
             ))}
           </ul>
-          <aside className="card-warm space-y-4">
+          <aside className="card space-y-4 p-6">
             <div className="flex items-baseline justify-between">
               <span className="text-ink/70">{t('subtotal')}</span>
-              <span className="font-display text-2xl text-ember">{format(cart.subtotalCents)}</span>
+              <span className="num font-display text-2xl text-ember">{format(cart.subtotalCents)}</span>
             </div>
             <p className="text-sm text-ink/60">{t('shippingNote')}</p>
             <Link href="/checkout" className="btn-primary w-full no-underline">

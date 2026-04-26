@@ -1,4 +1,4 @@
-import { safeApiFetch } from '@/lib/api-server';
+import { adminFetch as safeApiFetch } from '@/lib/api-admin';
 
 type AuditEntry = {
   id: string;

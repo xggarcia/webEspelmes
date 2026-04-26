@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { safeApiFetch } from '@/lib/api-server';
+import { adminFetch as safeApiFetch } from '@/lib/api-admin';
 import { ProductForm } from '@/components/admin/ProductForm';
 
 type Category = { id: string; name: string; slug: string };
@@ -44,8 +44,8 @@ export default async function EditProductPage({
 }) {
   const { id } = await params;
   const [product, categories] = await Promise.all([
-    safeApiFetch<AdminProductDetail>(`/admin/products/${id}`, { forwardCookies: true }),
-    safeApiFetch<Category[]>('/categories', { forwardCookies: true }),
+    safeApiFetch<AdminProductDetail>(`/admin/products/${id}`),
+    safeApiFetch<Category[]>('/categories'),
   ]);
   if (!product) notFound();
 

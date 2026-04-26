@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { API_BASE } from '@/lib/api';
@@ -22,7 +22,7 @@ const EXAMPLES: Record<CommandName, string> = {
   ),
   'bulk-inventory-update': JSON.stringify(
     {
-      updates: [{ productId: 'REEMPLAÇA_ID', stockDelta: 10, reason: 'restock abril' }],
+      updates: [{ productId: 'REEMPLAÃ‡A_ID', stockDelta: 10, reason: 'restock abril' }],
       dryRun: true,
     },
     null,
@@ -30,7 +30,7 @@ const EXAMPLES: Record<CommandName, string> = {
   ),
   'order-status-batch': JSON.stringify(
     {
-      orderIds: ['REEMPLAÇA_ID'],
+      orderIds: ['REEMPLAÃ‡A_ID'],
       targetStatus: 'SHIPPED',
       note: 'enviament agrupat',
     },
@@ -59,9 +59,8 @@ export function CommandRunner({ commands }: { commands: string[] }) {
     setResult(null);
     try {
       const body = input.trim() ? JSON.parse(input) : {};
-      const res = await fetch(`${API_BASE}/admin/commands/${name}`, {
+      const res = await fetch(`/api/admin-proxy/admin/commands/${name}`, {
         method: 'POST',
-        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
@@ -110,16 +109,16 @@ export function CommandRunner({ commands }: { commands: string[] }) {
         disabled={busy}
         className="btn-primary disabled:opacity-50"
       >
-        {busy ? 'Executant…' : 'Executar ordre'}
+        {busy ? 'Executantâ€¦' : 'Executar ordre'}
       </button>
 
       {err && <p className="text-sm text-ember">{err}</p>}
 
       {result && (
-        <div className={`card-warm ${result.success ? '' : 'border-ember'}`}>
+        <div className={`card p-5 ${result.success ? '' : 'border-ember'}`}>
           <div className="flex items-center justify-between">
             <p className="font-display text-lg text-ink">
-              {result.success ? '✓' : '✗'} {result.name}
+              {result.success ? 'âœ“' : 'âœ—'} {result.name}
               {result.dryRun && <span className="ml-2 text-xs text-clay">(dry-run)</span>}
             </p>
             <span className="text-xs text-ink/50">{result.durationMs} ms</span>
@@ -140,3 +139,4 @@ export function CommandRunner({ commands }: { commands: string[] }) {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 
@@ -26,7 +26,7 @@ export function ColorPicker({
               key={o.code}
               type="button"
               onClick={() => onChange(o.hex, o.name)}
-              title={o.deltaCents !== 0 ? `${o.name} (${o.deltaCents > 0 ? '+' : ''}${(o.deltaCents / 100).toFixed(2)}€)` : o.name}
+              title={o.deltaCents !== 0 ? `${o.name} (${o.deltaCents > 0 ? '+' : ''}${(o.deltaCents / 100).toFixed(2)}â‚¬)` : o.name}
               aria-label={o.name}
               className={`h-8 w-8 rounded-full border-2 transition ${
                 active ? 'border-ember shadow-warm' : 'border-ink/15 hover:border-ember/50'
@@ -51,3 +51,4 @@ export function ColorPicker({
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import type { ConfiguratorState } from '@espelmes/shared';
 
@@ -68,3 +68,4 @@ export function LabelEditor({
     </div>
   );
 }
+

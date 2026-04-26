@@ -1,10 +1,10 @@
-import { safeApiFetch } from '@/lib/api-server';
+import { adminFetch as safeApiFetch } from '@/lib/api-admin';
 import { ProductForm } from '@/components/admin/ProductForm';
 
 type Category = { id: string; name: string; slug: string };
 
 export default async function NewProductPage() {
-  const categories = (await safeApiFetch<Category[]>('/categories', { forwardCookies: true })) ?? [];
+  const categories = (await safeApiFetch<Category[]>('/categories')) ?? [];
 
   return (
     <div className="space-y-4">

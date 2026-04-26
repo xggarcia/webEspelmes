@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
-import { Fraunces, Inter } from 'next/font/google';
+import { Fraunces, Inter, JetBrains_Mono } from 'next/font/google';
 import { routing } from '@/i18n/routing';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
@@ -11,10 +11,16 @@ const display = Fraunces({
   subsets: ['latin'],
   variable: '--font-display',
   display: 'swap',
+  axes: ['opsz', 'SOFT'],
 });
 const sans = Inter({
   subsets: ['latin'],
   variable: '--font-sans',
+  display: 'swap',
+});
+const mono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
   display: 'swap',
 });
 
@@ -36,11 +42,11 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
   const messages = await getMessages();
   return (
-    <html lang={locale} className={`${display.variable} ${sans.variable}`}>
-      <body className="min-h-screen">
+    <html lang={locale} className={`${display.variable} ${sans.variable} ${mono.variable}`}>
+      <body className="min-h-screen bg-bone">
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Header />
-          <main className="container-lux py-10 animate-lift">{children}</main>
+          <main>{children}</main>
           <Footer />
         </NextIntlClientProvider>
       </body>
