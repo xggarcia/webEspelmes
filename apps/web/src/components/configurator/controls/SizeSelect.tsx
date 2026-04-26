@@ -11,9 +11,13 @@ export function SizeSelect({
   options: { code: string; label: string; deltaCents: number }[];
   onChange: (v: string) => void;
 }) {
+  const selected = options.find((o) => o.code === value);
   return (
-    <div className="space-y-2">
-      <p className="text-sm font-medium text-ink/80">{label}</p>
+    <div className="space-y-3 px-4 py-3">
+      <div className="flex items-center justify-between">
+        <p className="text-[1.9rem] font-display leading-none text-ink">{label}</p>
+        <p className="text-sm text-ink/60">{selected?.label ?? value}</p>
+      </div>
       <div className="flex flex-wrap gap-2">
         {options.map((o) => {
           const active = o.code === value;
@@ -31,7 +35,7 @@ export function SizeSelect({
               <span className="font-medium">{o.label}</span>
               {o.deltaCents !== 0 && (
                 <span className="ml-2 text-xs text-ink/50">
-                  {o.deltaCents > 0 ? '+' : ''}{(o.deltaCents / 100).toFixed(2)}â‚¬
+                  {o.deltaCents > 0 ? '+' : ''}{(o.deltaCents / 100).toFixed(2)}€
                 </span>
               )}
             </button>

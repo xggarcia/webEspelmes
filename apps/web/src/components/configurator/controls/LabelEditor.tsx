@@ -20,8 +20,11 @@ export function LabelEditor({
   onChange: (patch: Partial<ConfiguratorState['label']>) => void;
 }) {
   return (
-    <div className="space-y-2">
-      <p className="text-sm font-medium text-ink/80">{label}</p>
+    <div className="space-y-3 px-4 py-3">
+      <div className="flex items-center justify-between">
+        <p className="text-[1.9rem] font-display leading-none text-ink">{label}</p>
+        <p className="text-sm text-ink/60">{value.text || '-'}</p>
+      </div>
       <div className="space-y-2 rounded-lg border border-ink/10 bg-cream/60 p-3">
         <div>
           <label className="text-xs text-ink/60">{textLabel}</label>

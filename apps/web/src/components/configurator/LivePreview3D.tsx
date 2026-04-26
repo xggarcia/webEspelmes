@@ -103,7 +103,7 @@ export function LivePreview3D({
   const url = absoluteModelUrl(modelUrl);
 
   return (
-    <div className="aspect-[4/5] w-full overflow-hidden rounded-xl2 bg-gradient-to-br from-linen to-wax/40 shadow-warm">
+    <div className="aspect-[16/10] w-full max-h-[62vh] overflow-hidden rounded-2xl bg-gradient-to-br from-linen to-wax/40 shadow-warm">
       <Canvas
         shadows
         dpr={dpr}

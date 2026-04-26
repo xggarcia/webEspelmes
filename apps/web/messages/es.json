@@ -145,6 +145,8 @@
   "configurator": {
     "title": "Personaliza tu vela",
     "lead": "Cada cambio se ve al instante. Juega con la forma, el color, el acabado y ponle tu nombre.",
+    "customization": "Personalización",
+    "noOptions": "Este producto no tiene opciones configurables ahora mismo.",
     "shape": "Forma",
     "size": "Tamaño",
     "color": "Color",

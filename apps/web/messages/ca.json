@@ -145,6 +145,8 @@
   "configurator": {
     "title": "Personalitza la teva espelma",
     "lead": "Cada canvi es veu a l'instant. Juga amb la forma, el color, l'acabat i posa-li el teu nom.",
+    "customization": "Personalització",
+    "noOptions": "Aquest producte no té opcions configurables ara mateix.",
     "shape": "Forma",
     "size": "Mida",
     "color": "Color",

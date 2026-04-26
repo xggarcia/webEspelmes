@@ -32,6 +32,7 @@ type AdminProductDetail = {
   isActive: boolean;
   vatRate: number;
   heroImageUrl: string | null;
+  images: { url: string; alt: string | null }[];
   modelUrl: string | null;
   modelMeta: { scale?: number; yOffset?: number; cameraFov?: number } | null;
   options: ProductOption[];
@@ -68,6 +69,7 @@ export default async function EditProductPage({
           isActive: product.isActive,
           vatRate: product.vatRate,
           heroImageUrl: product.heroImageUrl,
+          images: product.images ?? [],
           modelUrl: product.modelUrl ?? null,
           modelMeta: product.modelMeta ?? null,
         }}

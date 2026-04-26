@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from '@/i18n/routing';
 import { OptionsEditor } from './OptionsEditor';
 
@@ -34,9 +34,22 @@ type ProductInput = {
   isActive: boolean;
   vatRate: number;
   heroImageUrl: string | null;
+  images?: { url: string; alt: string | null }[];
   modelUrl?: string | null;
   modelMeta?: { scale?: number; yOffset?: number; cameraFov?: number } | null;
 };
+
+function normalizeSlug(value: string) {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .slice(0, 120);
+}
 
 export function ProductForm({
   categories,
@@ -48,13 +61,73 @@ export function ProductForm({
   initialOptions?: ProductOption[];
 }) {
   const router = useRouter();
-  const [form, setForm] = useState(initial);
+  const [form, setForm] = useState<ProductInput>({
+    ...initial,
+    images: initial.images ?? [],
+  });
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const [uploadingModel, setUploadingModel] = useState(false);
+  const [uploadingHero, setUploadingHero] = useState(false);
+  const [uploadingGallery, setUploadingGallery] = useState(false);
+
+  useEffect(() => {
+    if (form.categoryId || categories.length === 0) return;
+    setForm((f) => ({ ...f, categoryId: categories[0].id }));
+  }, [categories, form.categoryId]);
+
+  async function uploadImage(file: File): Promise<string> {
+    if (!file.type.startsWith('image/')) {
+      throw new Error('Nomes imatges');
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      throw new Error('Maxim 10 MB per imatge');
+    }
+    const fd = new FormData();
+    fd.append('file', file);
+    const res = await fetch(`/api/admin-proxy/admin/uploads/image`, {
+      method: 'POST',
+      body: fd,
+    });
+    if (!res.ok) throw new Error(await res.text());
+    const { url } = (await res.json()) as { url: string };
+    return url;
+  }
+
+  async function uploadHeroImage(file: File) {
+    setUploadingHero(true);
+    setErr(null);
+    try {
+      const url = await uploadImage(file);
+      setForm((f) => ({ ...f, heroImageUrl: url }));
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : 'Error pujant la portada');
+    } finally {
+      setUploadingHero(false);
+    }
+  }
+
+  async function uploadGalleryImages(files: FileList) {
+    setUploadingGallery(true);
+    setErr(null);
+    try {
+      const uploaded: { url: string; alt: string | null }[] = [];
+      for (const file of Array.from(files)) {
+        const url = await uploadImage(file);
+        uploaded.push({ url, alt: null });
+      }
+      if (uploaded.length) {
+        setForm((f) => ({ ...f, images: [...(f.images ?? []), ...uploaded] }));
+      }
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : 'Error pujant les imatges');
+    } finally {
+      setUploadingGallery(false);
+    }
+  }
 
   async function uploadModel(file: File) {
-    setUploading(true);
+    setUploadingModel(true);
     setErr(null);
     try {
       if (!file.name.toLowerCase().endsWith('.glb')) {
@@ -75,7 +148,7 @@ export function ProductForm({
     } catch (e) {
       setErr(e instanceof Error ? e.message : 'Error pujant el model');
     } finally {
-      setUploading(false);
+      setUploadingModel(false);
     }
   }
 
@@ -89,7 +162,7 @@ export function ProductForm({
         ? `/api/admin-proxy/admin/products/${form.id}`
         : `/api/admin-proxy/admin/products`;
       const payload = {
-        slug: form.slug,
+        slug: normalizeSlug(form.slug),
         name: form.name,
         shortDescription: form.shortDescription,
         description: form.description,
@@ -100,6 +173,7 @@ export function ProductForm({
         isActive: form.isActive,
         vatRate: Number(form.vatRate),
         heroImageUrl: form.heroImageUrl || null,
+        images: (form.images ?? []).map((img) => ({ url: img.url, alt: img.alt })),
         modelUrl: form.modelUrl || null,
         modelMeta: form.modelMeta ?? null,
       };
@@ -155,21 +229,19 @@ export function ProductForm({
             pattern="[a-z0-9-]+"
             value={form.slug}
             onChange={(e) => setForm({ ...form, slug: e.target.value })}
+            onBlur={(e) => setForm((f) => ({ ...f, slug: normalizeSlug(e.target.value) }))}
             className={inputCls}
           />
+          <p className="mt-1 text-xs text-ink/55">Nomes lletres minuscules, numeros i guions.</p>
         </Field>
         <Field label="Categoria">
-          <div className="flex gap-3 pt-1">
-            {[
-              { slug: 'veles', label: 'Espelmes' },
-              { slug: 'ciment', label: 'Ciment' },
-            ].map(({ slug, label }) => {
-              const cat = categories.find((c) => c.slug === slug);
-              return (
+          {categories.length > 0 ? (
+            <div className="flex flex-wrap gap-3 pt-1">
+              {categories.map((cat) => (
                 <label
-                  key={slug}
-                  className={`flex flex-1 cursor-pointer items-center justify-center rounded-xl border py-2 text-sm transition ${
-                    form.categoryId === cat?.id
+                  key={cat.id}
+                  className={`flex min-w-[180px] flex-1 cursor-pointer items-center justify-center rounded-xl border py-2 text-sm transition ${
+                    form.categoryId === cat.id
                       ? 'border-ember bg-ember/10 text-ember'
                       : 'border-ink/15 text-ink/70 hover:border-ink/40'
                   }`}
@@ -179,16 +251,19 @@ export function ProductForm({
                     name="categoryId"
                     required
                     className="sr-only"
-                    value={cat?.id ?? ''}
-                    checked={form.categoryId === cat?.id}
-                    onChange={() => cat && setForm({ ...form, categoryId: cat.id })}
+                    value={cat.id}
+                    checked={form.categoryId === cat.id}
+                    onChange={() => setForm({ ...form, categoryId: cat.id })}
                   />
-                  {label}
-                  {!cat && <span className="ml-1 text-xs text-ember/60">(no a la BD)</span>}
+                  {cat.name}
                 </label>
-              );
-            })}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <p className="rounded-xl border border-ember/30 bg-ember/5 px-3 py-2 text-sm text-ember">
+              No hi ha categories disponibles. Crea categories abans de crear productes.
+            </p>
+          )}
         </Field>
         <Field label="Preu base (centims)">
           <input
@@ -240,14 +315,95 @@ export function ProductForm({
         />
       </Field>
 
-      <Field label="URL imatge hero">
-        <input
-          type="url"
-          value={form.heroImageUrl ?? ''}
-          onChange={(e) => setForm({ ...form, heroImageUrl: e.target.value })}
-          className={inputCls}
-        />
-      </Field>
+      <fieldset className="space-y-3 rounded-md border border-ink/10 p-3">
+        <legend className="px-1 text-xs font-medium uppercase tracking-wider text-ink/60">
+          Portada (1 imatge)
+        </legend>
+        <div className="flex items-center gap-3 text-sm">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) uploadHeroImage(f);
+            }}
+            disabled={uploadingHero}
+          />
+          {uploadingHero && <span className="text-ink/60">Pujant...</span>}
+        </div>
+        {form.heroImageUrl ? (
+          <div className="space-y-2 text-xs">
+            <div className="h-28 w-28 overflow-hidden rounded-md bg-wax/40">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={form.heroImageUrl} alt="Portada" className="h-full w-full object-cover" />
+            </div>
+            <div className="flex items-center gap-3">
+              <a
+                href={form.heroImageUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="truncate text-ember underline"
+              >
+                Veure portada
+              </a>
+              <button
+                type="button"
+                onClick={() => setForm((f) => ({ ...f, heroImageUrl: null }))}
+                className="text-ember/80 hover:text-ember"
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        ) : (
+          <p className="text-xs text-ink/50">Sense portada.</p>
+        )}
+      </fieldset>
+
+      <fieldset className="space-y-3 rounded-md border border-ink/10 p-3">
+        <legend className="px-1 text-xs font-medium uppercase tracking-wider text-ink/60">
+          Fotos del producte (galeria)
+        </legend>
+        <div className="flex items-center gap-3 text-sm">
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={(e) => {
+              const files = e.target.files;
+              if (files && files.length > 0) uploadGalleryImages(files);
+            }}
+            disabled={uploadingGallery}
+          />
+          {uploadingGallery && <span className="text-ink/60">Pujant...</span>}
+        </div>
+        {form.images && form.images.length > 0 ? (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {form.images.map((img, index) => (
+              <div key={`${img.url}-${index}`} className="space-y-1">
+                <div className="aspect-square overflow-hidden rounded-md bg-wax/40">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={img.url} alt={img.alt ?? ''} className="h-full w-full object-cover" />
+                </div>
+                <button
+                  type="button"
+                  className="text-xs text-ember/80 hover:text-ember"
+                  onClick={() =>
+                    setForm((f) => ({
+                      ...f,
+                      images: (f.images ?? []).filter((_, i) => i !== index),
+                    }))
+                  }
+                >
+                  Eliminar
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-xs text-ink/50">Sense fotos de galeria.</p>
+        )}
+      </fieldset>
 
       <fieldset className="space-y-3 rounded-md border border-ink/10 p-3">
         <legend className="px-1 text-xs font-medium uppercase tracking-wider text-ink/60">
@@ -261,9 +417,9 @@ export function ProductForm({
               const f = e.target.files?.[0];
               if (f) uploadModel(f);
             }}
-            disabled={uploading}
+            disabled={uploadingModel}
           />
-          {uploading && <span className="text-ink/60">Pujant...</span>}
+          {uploadingModel && <span className="text-ink/60">Pujant...</span>}
         </div>
         {form.modelUrl ? (
           <div className="flex items-center gap-3 text-xs">

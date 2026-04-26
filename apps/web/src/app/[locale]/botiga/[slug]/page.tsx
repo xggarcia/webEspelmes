@@ -4,6 +4,7 @@ import { safeApiFetch } from '@/lib/api-server';
 import { formatEur } from '@/lib/currency';
 import { Link } from '@/i18n/routing';
 import { AddToCartButton } from '@/components/cart/AddToCartButton';
+import { ProductImageCarousel } from '@/components/catalog/ProductImageCarousel';
 import type { ProductDetail } from '@espelmes/shared';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -14,39 +15,19 @@ export default async function ProductPage({ params }: Props) {
   const loc = await getLocale();
   const product = await safeApiFetch<ProductDetail>(`/products/${slug}`);
   if (!product) notFound();
+  const images =
+    product.images.length > 0
+      ? product.images
+      : product.heroImageUrl
+        ? [{ url: product.heroImageUrl, alt: product.name }]
+        : [];
   const tp = await getTranslations('product');
   const tc = await getTranslations('catalog');
 
   return (
     <div className="grid gap-10 md:grid-cols-[1.1fr_1fr]">
       <div className="space-y-3">
-        <div className="aspect-[4/5] w-full overflow-hidden rounded-xl2 bg-wax/40 shadow-warm">
-          {product.images[0] ? (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              src={product.images[0].url}
-              alt={product.images[0].alt ?? product.name}
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center text-ember/30">
-              <svg width="100" height="130" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 3c-1.5 2-3 3.5-3 5.5A3 3 0 0 0 12 11.5 3 3 0 0 0 15 8.5C15 6.5 13.5 5 12 3z" />
-                <rect x="9" y="12" width="6" height="8" rx="1" opacity="0.6" />
-              </svg>
-            </div>
-          )}
-        </div>
-        {product.images.length > 1 && (
-          <div className="grid grid-cols-4 gap-2">
-            {product.images.slice(1, 5).map((img, i) => (
-              <div key={i} className="aspect-square overflow-hidden rounded-md bg-wax/40">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={img.url} alt={img.alt ?? ''} className="h-full w-full object-cover" />
-              </div>
-            ))}
-          </div>
-        )}
+        <ProductImageCarousel images={images} productName={product.name} />
       </div>
 
       <div className="space-y-6">

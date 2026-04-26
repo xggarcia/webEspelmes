@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { Link } from '@/i18n/routing';
 
 const items: { href: string; label: string }[] = [
@@ -13,7 +13,12 @@ const items: { href: string; label: string }[] = [
 ];
 
 export function AdminNav() {
-  const pathname = usePathname();
+  const [pathname, setPathname] = useState('');
+
+  useEffect(() => {
+    setPathname(window.location.pathname);
+  }, []);
+
   return (
     <nav className="flex flex-wrap gap-1 border-b border-ink/10 pb-3">
       {items.map((it) => {

@@ -29,9 +29,8 @@ async function main() {
 
   // --- Categories ---
   const categories = [
-    { slug: 'aromatiques', name: 'Aromàtiques', description: "Amb olis essencials i aromes suaus." },
-    { slug: 'decoratives', name: 'Decoratives', description: 'Formes i colors per il·luminar la llar.' },
-    { slug: 'personalitzades', name: 'Personalitzades', description: 'Fetes a mida per a tu.' },
+    { slug: 'espelmes', name: 'Espelmes', description: 'Espelmes artesanes per cada moment.' },
+    { slug: 'decoracio', name: 'Decoració', description: 'Peces decoratives per a casa i esdeveniments.' },
   ];
   for (const [i, c] of categories.entries()) {
     await prisma.category.upsert({
@@ -41,9 +40,8 @@ async function main() {
     });
   }
 
-  const catAroma = await prisma.category.findUniqueOrThrow({ where: { slug: 'aromatiques' } });
-  const catDeco = await prisma.category.findUniqueOrThrow({ where: { slug: 'decoratives' } });
-  const catPers = await prisma.category.findUniqueOrThrow({ where: { slug: 'personalitzades' } });
+  const catEspelmes = await prisma.category.findUniqueOrThrow({ where: { slug: 'espelmes' } });
+  const catDecoracio = await prisma.category.findUniqueOrThrow({ where: { slug: 'decoracio' } });
 
   // --- Products ---
   const products = [
@@ -55,7 +53,7 @@ async function main() {
         "Una espelma que porta la calma dels camps de lavanda a casa teva. Mecha de cotó i cera de soja cultivada amb cura.",
       basePriceCents: 1800,
       stock: 24,
-      categoryId: catAroma.id,
+      categoryId: catEspelmes.id,
       heroImageUrl: null,
     },
     {
@@ -65,7 +63,7 @@ async function main() {
       description: 'Olor viva i neta, pensada per a matins tranquils.',
       basePriceCents: 1900,
       stock: 18,
-      categoryId: catAroma.id,
+      categoryId: catEspelmes.id,
       heroImageUrl: null,
     },
     {
@@ -75,7 +73,7 @@ async function main() {
       description: 'Per a centres de taula i racons especials.',
       basePriceCents: 2200,
       stock: 30,
-      categoryId: catDeco.id,
+      categoryId: catDecoracio.id,
       heroImageUrl: null,
     },
     {
@@ -86,7 +84,7 @@ async function main() {
         'Disseny la teva espelma al configurador en directe. Ideal per a regals, casaments i celebracions.',
       basePriceCents: 2400,
       stock: 100,
-      categoryId: catPers.id,
+      categoryId: catEspelmes.id,
       heroImageUrl: null,
     },
   ];
@@ -227,6 +225,20 @@ async function main() {
       },
     });
   }
+
+  // Reassign any existing products that still point to legacy categories,
+  // then remove those categories safely.
+  await prisma.product.updateMany({
+    where: { category: { slug: { in: ['aromatiques', 'personalitzades'] } } },
+    data: { categoryId: catEspelmes.id },
+  });
+  await prisma.product.updateMany({
+    where: { category: { slug: 'decoratives' } },
+    data: { categoryId: catDecoracio.id },
+  });
+  await prisma.category.deleteMany({
+    where: { slug: { in: ['aromatiques', 'decoratives', 'personalitzades'] } },
+  });
 
   console.info('✔ Seed completed. Admin:', adminEmail);
 }

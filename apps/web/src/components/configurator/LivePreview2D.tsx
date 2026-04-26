@@ -28,7 +28,7 @@ export function LivePreview2D({ state }: { state: ConfiguratorState | null }) {
   }, [state]);
 
   return (
-    <div className="relative aspect-[4/5] w-full overflow-hidden rounded-xl2 bg-gradient-to-br from-wax via-cream to-dust shadow-warm">
+    <div className="relative aspect-[16/10] w-full max-h-[62vh] overflow-hidden rounded-2xl bg-gradient-to-br from-wax via-cream to-dust shadow-warm">
       <canvas ref={ref} className="absolute inset-0 h-full w-full" aria-label="Candle preview" />
     </div>
   );

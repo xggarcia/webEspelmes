@@ -26,7 +26,7 @@ export default async function AdminLayout({ children, params }: Props) {
         </div>
       </header>
       <AdminNav />
-      <main>{children}</main>
+      <section>{children}</section>
     </div>
   );
 }

@@ -16,6 +16,7 @@ import type {
 } from '@espelmes/shared';
 import { LivePreview2D } from './LivePreview2D';
 import { LivePreview3D } from './LivePreview3D';
+import { ProductImageCarousel } from '@/components/catalog/ProductImageCarousel';
 import { ShapeSelect } from './controls/ShapeSelect';
 import { SizeSelect } from './controls/SizeSelect';
 import { ColorPicker } from './controls/ColorPicker';
@@ -44,6 +45,12 @@ export function ConfiguratorRoot({
   const [server, setServer] = useState<ConfiguratorServerState | null>(null);
   const [status, setStatus] = useState<'connecting' | 'ready' | 'offline'>('connecting');
   const modelUrl = (product as { modelUrl?: string | null }).modelUrl ?? null;
+  const imagePreview =
+    product.images.length > 0
+      ? product.images
+      : product.heroImageUrl
+        ? [{ url: product.heroImageUrl, alt: product.name }]
+        : [];
   const modelMeta =
     (product as { modelMeta?: { scale?: number; yOffset?: number; cameraFov?: number } | null })
       .modelMeta ?? null;
@@ -119,6 +126,14 @@ export function ConfiguratorRoot({
   const availability = server?.availability ?? null;
 
   const options = useMemo(() => buildOptionIndex(product), [product]);
+  const hasAnyControls =
+    options.shapes.length > 0 ||
+    options.sizes.length > 0 ||
+    options.colors.length > 0 ||
+    options.finishes.length > 0 ||
+    options.platforms.length > 0 ||
+    options.hasLabel ||
+    options.accessories.length > 0;
 
   async function addToCart() {
     if (!state) return;
@@ -166,94 +181,113 @@ export function ConfiguratorRoot({
   }
 
   return (
-    <div className="grid gap-8 md:grid-cols-[1fr_1.1fr] md:items-start">
+    <div className="mx-auto grid w-full max-w-[1320px] gap-6 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-start lg:gap-8">
       <div className="space-y-3">
         {status !== 'ready' && (
           <div className="text-xs text-ember/80">{t('disconnected')}</div>
         )}
-        {show3D ? (
-          <LivePreview3D
-            state={state}
-            modelUrl={modelUrl}
-            modelMeta={modelMeta}
-            onFail={() => setModel3dFailed(true)}
-          />
-        ) : (
-          <LivePreview2D state={state} />
-        )}
+        <div className="mx-auto w-full max-w-[920px] lg:sticky lg:top-24">
+          {show3D ? (
+            <LivePreview3D
+              state={state}
+              modelUrl={modelUrl}
+              modelMeta={modelMeta}
+              onFail={() => setModel3dFailed(true)}
+            />
+          ) : imagePreview.length > 0 ? (
+            <ProductImageCarousel images={imagePreview} productName={product.name} />
+          ) : (
+            <LivePreview2D state={state} />
+          )}
+        </div>
       </div>
 
-      <div className="space-y-6">
-        {options.shapes.length > 1 && (
-          <ShapeSelect
-            label={t('shape')}
-            value={state.shape}
-            options={options.shapes}
-            tNamespace={(k) => t(`shape_${k}` as never) || k}
-            onChange={(v) => applyPatch({ shape: v as ConfiguratorState['shape'] })}
-          />
-        )}
-        {options.sizes.length > 1 && (
-          <SizeSelect
-            label={t('size')}
-            value={state.sizeCode}
-            options={options.sizes}
-            onChange={(v) => applyPatch({ sizeCode: v })}
-          />
-        )}
-        {options.colors.length > 0 && (
-          <ColorPicker
-            label={t('color')}
-            value={state.color.hex}
-            options={options.colors}
-            onChange={(hex, name) =>
-              applyPatch({ color: { hex, ...(name ? { name } : {}) } })
-            }
-          />
-        )}
-        {options.finishes.length > 1 && (
-          <FinishSelect
-            label={t('finish')}
-            value={state.finish}
-            options={options.finishes}
-            tNamespace={(k) => t(`finish_${k}` as never) || k}
-            onChange={(v) => applyPatch({ finish: v as ConfiguratorState['finish'] })}
-          />
-        )}
-        {options.platforms.length > 1 && (
-          <PlatformSelect
-            label={t('platform')}
-            value={state.platform}
-            options={options.platforms}
-            tNamespace={(k) => t(`platform_${k}` as never) || k}
-            onChange={(v) => applyPatch({ platform: v as ConfiguratorState['platform'] })}
-          />
-        )}
-        {options.hasLabel && (
-          <LabelEditor
-            label={t('label')}
-            textLabel={t('labelText')}
-            fontLabel={t('labelFont')}
-            colorLabel={t('labelColor')}
-            fontOptions={[
-              { value: 'serif', label: t('fontSerif') },
-              { value: 'script', label: t('fontScript') },
-              { value: 'sans', label: t('fontSans') },
-            ]}
-            value={state.label}
-            onChange={(patch) => applyPatch({ label: { ...state.label, ...patch } })}
-          />
-        )}
-        {options.accessories.length > 0 && (
-          <Accessories
-            label={t('accessories')}
-            value={state.accessories}
-            options={options.accessories}
-            onChange={(next) => applyPatch({ accessories: next })}
-          />
-        )}
+      <div className="w-full max-w-[390px] justify-self-end space-y-4">
+        <div className="card overflow-hidden p-0">
+          <div className="px-4 py-3">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-ink/70">
+              {t('customization')}
+            </h2>
+          </div>
+          {!hasAnyControls && (
+            <p className="mx-4 mb-4 rounded-xl border border-ink/10 bg-cream px-3 py-2 text-sm text-ink/70">
+              {t('noOptions')}
+            </p>
+          )}
 
-        <div className="card p-5 space-y-4">
+          <div className="divide-y divide-ink/10">
+            {options.colors.length > 0 && (
+              <ColorPicker
+                label={t('color')}
+                value={state.color.hex}
+                options={options.colors}
+                onChange={(hex, name) =>
+                  applyPatch({ color: { hex, ...(name ? { name } : {}) } })
+                }
+              />
+            )}
+            {options.shapes.length > 0 && (
+              <ShapeSelect
+                label={t('shape')}
+                value={state.shape}
+                options={options.shapes}
+                tNamespace={(k) => t(`shape_${k}` as never) || k}
+                onChange={(v) => applyPatch({ shape: v as ConfiguratorState['shape'] })}
+              />
+            )}
+            {options.sizes.length > 0 && (
+              <SizeSelect
+                label={t('size')}
+                value={state.sizeCode}
+                options={options.sizes}
+                onChange={(v) => applyPatch({ sizeCode: v })}
+              />
+            )}
+            {options.finishes.length > 0 && (
+              <FinishSelect
+                label={t('finish')}
+                value={state.finish}
+                options={options.finishes}
+                tNamespace={(k) => t(`finish_${k}` as never) || k}
+                onChange={(v) => applyPatch({ finish: v as ConfiguratorState['finish'] })}
+              />
+            )}
+            {options.platforms.length > 0 && (
+              <PlatformSelect
+                label={t('platform')}
+                value={state.platform}
+                options={options.platforms}
+                tNamespace={(k) => t(`platform_${k}` as never) || k}
+                onChange={(v) => applyPatch({ platform: v as ConfiguratorState['platform'] })}
+              />
+            )}
+            {options.hasLabel && (
+              <LabelEditor
+                label={t('label')}
+                textLabel={t('labelText')}
+                fontLabel={t('labelFont')}
+                colorLabel={t('labelColor')}
+                fontOptions={[
+                  { value: 'serif', label: t('fontSerif') },
+                  { value: 'script', label: t('fontScript') },
+                  { value: 'sans', label: t('fontSans') },
+                ]}
+                value={state.label}
+                onChange={(patch) => applyPatch({ label: { ...state.label, ...patch } })}
+              />
+            )}
+            {options.accessories.length > 0 && (
+              <Accessories
+                label={t('accessories')}
+                value={state.accessories}
+                options={options.accessories}
+                onChange={(next) => applyPatch({ accessories: next })}
+              />
+            )}
+          </div>
+        </div>
+
+        <div className="card space-y-4 p-4">
           <div className="flex items-baseline justify-between">
             <span className="text-ink/70">{t('unitPrice')}</span>
             <span className="font-display text-xl text-ember">

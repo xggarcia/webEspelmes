@@ -63,6 +63,15 @@ const CreateProductSchema = z.object({
   isCustomizable: z.boolean().default(true),
   isActive: z.boolean().default(true),
   heroImageUrl: z.string().url().optional().nullable(),
+  images: z
+    .array(
+      z.object({
+        url: z.string().url(),
+        alt: z.string().max(255).optional().nullable(),
+      }),
+    )
+    .max(20)
+    .optional(),
   modelUrl: z.string().optional().nullable(),
   modelMeta: z
     .object({
@@ -115,13 +124,22 @@ export class ProductsAdminController {
     @CurrentUser() user: RequestUser,
     @Req() req: Request,
   ) {
-    const { modelMeta, ...rest } = dto;
+    const { modelMeta, images, ...rest } = dto;
     const data: Prisma.ProductUncheckedCreateInput = {
       ...rest,
       modelMeta:
         modelMeta === null || modelMeta === undefined
           ? Prisma.JsonNull
           : (modelMeta as Prisma.InputJsonValue),
+      images: images?.length
+        ? {
+            create: images.map((img, index) => ({
+              url: img.url,
+              alt: img.alt ?? null,
+              sortOrder: index,
+            })),
+          }
+        : undefined,
     };
     const created = await this.prisma.product.create({ data });
     await this.audit.record({
@@ -142,13 +160,23 @@ export class ProductsAdminController {
     @Req() req: Request,
   ) {
     const before = await this.prisma.product.findUniqueOrThrow({ where: { id } });
-    const { modelMeta, ...rest } = dto;
+    const { modelMeta, images, ...rest } = dto;
     const data: Prisma.ProductUncheckedUpdateInput = { ...rest };
     if (modelMeta !== undefined) {
       data.modelMeta =
         modelMeta === null
           ? Prisma.JsonNull
           : (modelMeta as Prisma.InputJsonValue);
+    }
+    if (images !== undefined) {
+      data.images = {
+        deleteMany: {},
+        create: images.map((img, index) => ({
+          url: img.url,
+          alt: img.alt ?? null,
+          sortOrder: index,
+        })),
+      };
     }
     const updated = await this.prisma.product.update({ where: { id }, data });
     await this.audit.record({
