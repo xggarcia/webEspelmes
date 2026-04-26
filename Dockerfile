@@ -1,4 +1,5 @@
-FROM node:22-alpine AS base
+FROM node:22-slim AS base
+RUN apt-get update -y && apt-get install -y openssl python3 make g++ && rm -rf /var/lib/apt/lists/*
 RUN npm install -g pnpm@9.12.0
 WORKDIR /app
 
