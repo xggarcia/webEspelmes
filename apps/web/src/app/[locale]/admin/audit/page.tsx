@@ -20,9 +20,7 @@ export default async function AdminAuditPage({
   if (sp.action) qs.set('action', sp.action);
   if (sp.actorId) qs.set('actorId', sp.actorId);
 
-  const entries = await safeApiFetch<AuditEntry[]>(`/admin/audit?${qs.toString()}`, {
-    forwardCookies: true,
-  });
+  const entries = await safeApiFetch<AuditEntry[]>(`/admin/audit?${qs.toString()}`);
   if (!entries) return <p className="text-ember">Error carregant auditoria.</p>;
 
   return (

@@ -9,9 +9,7 @@ type Customer = {
 };
 
 export default async function AdminCustomersPage() {
-  const customers = await safeApiFetch<Customer[]>('/admin/customers?limit=200', {
-    forwardCookies: true,
-  });
+  const customers = await safeApiFetch<Customer[]>('/admin/customers?limit=200');
   if (!customers) return <p className="text-ember">Error carregant clients.</p>;
 
   return (

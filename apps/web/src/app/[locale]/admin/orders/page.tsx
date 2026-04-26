@@ -21,9 +21,7 @@ const statusColor: Record<string, string> = {
 };
 
 export default async function AdminOrdersPage() {
-  const orders = await safeApiFetch<Order[]>('/admin/orders/recent?limit=100', {
-    forwardCookies: true,
-  });
+  const orders = await safeApiFetch<Order[]>('/admin/orders/recent?limit=100');
   if (!orders) return <p className="text-ember">Error carregant comandes.</p>;
 
   return (
