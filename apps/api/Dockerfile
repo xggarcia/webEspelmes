@@ -1,28 +1,26 @@
 FROM node:22-alpine AS base
 RUN npm install -g pnpm@9.12.0
-
 WORKDIR /app
 
-# Copy workspace config
-COPY pnpm-workspace.yaml ./
-COPY package.json ./
-COPY pnpm-lock.yaml ./
+# Workspace manifests
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 
-# Copy all package.json files for workspace resolution
-COPY apps/api/package.json ./apps/api/
+# Package manifests (needed for workspace resolution)
 COPY packages/shared/package.json ./packages/shared/
+COPY packages/config/package.json ./packages/config/
+COPY packages/ui/package.json ./packages/ui/
+COPY apps/api/package.json ./apps/api/
 
-# Install dependencies
+# Install all dependencies
 RUN pnpm install --frozen-lockfile
 
-# Copy source
-COPY apps/api ./apps/api
+# Copy source code
 COPY packages/shared ./packages/shared
+COPY packages/config ./packages/config
+COPY apps/api ./apps/api
 
 # Build
 RUN pnpm --filter @espelmes/api build
-
-# Generate Prisma client
 RUN pnpm --filter @espelmes/api exec prisma generate
 
 EXPOSE 4000
