@@ -1,4 +1,4 @@
-﻿import type { ProductSummary } from '@espelmes/shared';
+import type { ProductSummary } from '@espelmes/shared';
 import { Link } from '@/i18n/routing';
 import { formatEur } from '@/lib/currency';
 import { getLocale, getTranslations } from 'next-intl/server';
@@ -8,7 +8,7 @@ export async function ProductCard({ product }: { product: ProductSummary }) {
   const locale = await getLocale();
   const t = await getTranslations('catalog');
   const tp = await getTranslations('product');
-  // Click goes directly to the configurator â€” no detail page intermediate.
+  // Click goes directly to the configurator "” no detail page intermediate.
   const href = `/personalitza/${product.slug}`;
   return (
     <Link

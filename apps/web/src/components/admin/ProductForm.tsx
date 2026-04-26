@@ -1,8 +1,7 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import { useRouter } from '@/i18n/routing';
-import { API_BASE } from '@/lib/api';
 import { OptionsEditor } from './OptionsEditor';
 
 type Category = { id: string; name: string; slug: string };
@@ -59,16 +58,15 @@ export function ProductForm({
     setErr(null);
     try {
       if (!file.name.toLowerCase().endsWith('.glb')) {
-        throw new Error('NomÃ©s .glb');
+        throw new Error('Nomes .glb');
       }
       if (file.size > 60 * 1024 * 1024) {
-        throw new Error('MÃ xim 60 MB');
+        throw new Error('Maxim 60 MB');
       }
       const fd = new FormData();
       fd.append('file', file);
       const res = await fetch(`/api/admin-proxy/admin/uploads/model`, {
         method: 'POST',
-        
         body: fd,
       });
       if (!res.ok) throw new Error(await res.text());
@@ -107,7 +105,6 @@ export function ProductForm({
       };
       const res = await fetch(url, {
         method: isUpdate ? 'PATCH' : 'POST',
-        
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
@@ -133,7 +130,6 @@ export function ProductForm({
     try {
       await fetch(`/api/admin-proxy/admin/products/${form.id}`, {
         method: 'DELETE',
-        
       });
       router.push('/admin/products');
       router.refresh();
@@ -162,8 +158,8 @@ export function ProductForm({
             className={inputCls}
           />
         </Field>
-        <Field label=”Categoria”>
-          <div className=”flex gap-3 pt-1”>
+        <Field label="Categoria">
+          <div className="flex gap-3 pt-1">
             {[
               { slug: 'veles', label: 'Espelmes' },
               { slug: 'ciment', label: 'Ciment' },
@@ -179,22 +175,22 @@ export function ProductForm({
                   }`}
                 >
                   <input
-                    type=”radio”
-                    name=”categoryId”
+                    type="radio"
+                    name="categoryId"
                     required
-                    className=”sr-only”
+                    className="sr-only"
                     value={cat?.id ?? ''}
                     checked={form.categoryId === cat?.id}
                     onChange={() => cat && setForm({ ...form, categoryId: cat.id })}
                   />
                   {label}
-                  {!cat && <span className=”ml-1 text-xs text-ember/60”>(no a la BD)</span>}
+                  {!cat && <span className="ml-1 text-xs text-ember/60">(no a la BD)</span>}
                 </label>
               );
             })}
           </div>
         </Field>
-        <Field label="Preu base (cÃ¨ntims)">
+        <Field label="Preu base (centims)">
           <input
             type="number"
             min={0}
@@ -214,7 +210,7 @@ export function ProductForm({
             className={inputCls}
           />
         </Field>
-        <Field label="IVA (0â€“1)">
+        <Field label="IVA (0-1)">
           <input
             type="number"
             step="0.01"
@@ -227,7 +223,7 @@ export function ProductForm({
         </Field>
       </div>
 
-      <Field label="DescripciÃ³ curta">
+      <Field label="Descripcio curta">
         <input
           value={form.shortDescription}
           onChange={(e) => setForm({ ...form, shortDescription: e.target.value })}
@@ -235,7 +231,7 @@ export function ProductForm({
         />
       </Field>
 
-      <Field label="DescripciÃ³">
+      <Field label="Descripcio">
         <textarea
           rows={4}
           value={form.description}
@@ -267,7 +263,7 @@ export function ProductForm({
             }}
             disabled={uploading}
           />
-          {uploading && <span className="text-ink/60">Pujantâ€¦</span>}
+          {uploading && <span className="text-ink/60">Pujant...</span>}
         </div>
         {form.modelUrl ? (
           <div className="flex items-center gap-3 text-xs">
@@ -289,7 +285,7 @@ export function ProductForm({
           </div>
         ) : (
           <p className="text-xs text-ink/50">
-            Sense model. El configurador usarÃ  el mode 2D.
+            Sense model. El configurador usara el mode 2D.
           </p>
         )}
         <div className="grid grid-cols-2 gap-3">
@@ -308,7 +304,7 @@ export function ProductForm({
               className={inputCls}
             />
           </Field>
-          <Field label="DesplaÃ§ament Y">
+          <Field label="Desplacament Y">
             <input
               type="number"
               step="0.05"
@@ -354,7 +350,7 @@ export function ProductForm({
 
       <div className="flex items-center gap-3">
         <button type="submit" disabled={busy} className="btn-primary disabled:opacity-50">
-          {busy ? 'â€¦' : form.id ? 'Desa canvis' : 'Crear producte'}
+          {busy ? '...' : form.id ? 'Desa canvis' : 'Crear producte'}
         </button>
         {form.id && (
           <button type="button" onClick={deactivate} disabled={busy} className="btn-ghost text-ember">
@@ -377,4 +373,3 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     </label>
   );
 }
-

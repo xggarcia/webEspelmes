@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import { API_BASE } from '@/lib/api';
@@ -22,7 +22,7 @@ const EXAMPLES: Record<CommandName, string> = {
   ),
   'bulk-inventory-update': JSON.stringify(
     {
-      updates: [{ productId: 'REEMPLAÃ‡A_ID', stockDelta: 10, reason: 'restock abril' }],
+      updates: [{ productId: 'REEMPLAÇA_ID', stockDelta: 10, reason: 'restock abril' }],
       dryRun: true,
     },
     null,
@@ -30,7 +30,7 @@ const EXAMPLES: Record<CommandName, string> = {
   ),
   'order-status-batch': JSON.stringify(
     {
-      orderIds: ['REEMPLAÃ‡A_ID'],
+      orderIds: ['REEMPLAÇA_ID'],
       targetStatus: 'SHIPPED',
       note: 'enviament agrupat',
     },
@@ -109,7 +109,7 @@ export function CommandRunner({ commands }: { commands: string[] }) {
         disabled={busy}
         className="btn-primary disabled:opacity-50"
       >
-        {busy ? 'Executantâ€¦' : 'Executar ordre'}
+        {busy ? 'Executant…' : 'Executar ordre'}
       </button>
 
       {err && <p className="text-sm text-ember">{err}</p>}

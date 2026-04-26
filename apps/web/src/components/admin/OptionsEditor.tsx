@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import { API_BASE } from '@/lib/api';
@@ -126,7 +126,7 @@ export function OptionsEditor({
   return (
     <div className="space-y-6">
       <h3 className="text-xs font-medium uppercase tracking-wider text-ink/60">
-        Opcions de personalitzaciÃ³
+        Opcions de personalització
       </h3>
 
       {options.map((opt) => (
@@ -175,7 +175,7 @@ export function OptionsEditor({
           disabled={addingGroup}
           className="btn-primary disabled:opacity-50"
         >
-          {addingGroup ? 'â€¦' : 'Afegir grup'}
+          {addingGroup ? '…' : 'Afegir grup'}
         </button>
       </fieldset>
 
@@ -320,7 +320,7 @@ function OptionGroup({
         disabled={busy || !code || !label}
         className="btn-ghost text-sm disabled:opacity-40"
       >
-        {busy ? 'â€¦' : '+ Afegir valor'}
+        {busy ? '…' : '+ Afegir valor'}
       </button>
     </fieldset>
   );

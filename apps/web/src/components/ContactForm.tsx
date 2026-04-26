@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import { API_BASE } from '@/lib/api';
@@ -77,7 +77,7 @@ export function ContactForm({ labels }: { labels: Labels }) {
       </label>
       {err && <p className="text-sm text-ember">{err}</p>}
       <button type="submit" disabled={loading} className="btn-primary w-full disabled:opacity-60">
-        {loading ? 'â€¦' : labels.send}
+        {loading ? '…' : labels.send}
       </button>
     </form>
   );

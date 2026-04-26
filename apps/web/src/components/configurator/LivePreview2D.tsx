@@ -1,11 +1,11 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useRef } from 'react';
 import type { ConfiguratorState } from '@espelmes/shared';
 
 /**
  * Canvas-based MVP preview. Intentionally render-agnostic consumption of
- * ConfiguratorState â€” the same state will drive the future R3F 3D viewer.
+ * ConfiguratorState "” the same state will drive the future R3F 3D viewer.
  */
 export function LivePreview2D({ state }: { state: ConfiguratorState | null }) {
   const ref = useRef<HTMLCanvasElement>(null);

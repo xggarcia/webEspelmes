@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
@@ -307,7 +307,7 @@ export function ConfiguratorRoot({
             disabled={adding || !availability?.inStock}
             className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {adding ? 'â€¦' : t('addToCart')}
+            {adding ? '…' : t('addToCart')}
           </button>
         </div>
       </div>
