@@ -19,9 +19,14 @@ COPY packages/shared ./packages/shared
 COPY packages/config ./packages/config
 COPY apps/api ./apps/api
 
-# Build
-RUN pnpm --filter @espelmes/api build
+# Build shared package first (API imports from it)
+RUN pnpm --filter @espelmes/shared build
+
+# Generate Prisma client before compiling API
 RUN pnpm --filter @espelmes/api exec prisma generate
+
+# Build API
+RUN pnpm --filter @espelmes/api build
 
 EXPOSE 4000
 CMD ["pnpm", "--filter", "@espelmes/api", "start:prod"]
