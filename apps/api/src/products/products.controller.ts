@@ -10,6 +10,8 @@ const ProductListQuerySchema = PageQuerySchema.extend({
   categorySlug: z.string().min(1).optional(),
   search: z.string().min(1).max(80).optional(),
   customizableOnly: z.coerce.boolean().optional(),
+  heroFeatured: z.coerce.boolean().optional(),
+  weeklyFeatured: z.coerce.boolean().optional(),
 });
 
 @ApiTags('catalog')

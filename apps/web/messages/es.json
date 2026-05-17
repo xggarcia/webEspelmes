@@ -17,11 +17,18 @@
     "logout": "Cerrar sesión"
   },
   "home": {
-    "heroTitle": "Cada vela, una pequeña historia",
+    "heroEyebrow": "Piezas artesanales",
+    "heroTitle": "Cada pieza, una pequeña historia",
     "heroLead": "Trabajamos la cera en casa. Elegimos los aromas y los colores con calma. Cada vela sale de nuestras manos — y ahora puede salir con tu toque.",
     "ctaShop": "Ver la tienda",
     "ctaCustomize": "Personaliza la tuya",
-    "featuredTitle": "Destacadas esta semana",
+    "featuredTitle": "Nuevos productos",
+    "weeklyLabel": "Selección",
+    "weeklyTitle": "Destacadas de la semana",
+    "collectionLabel": "Colección",
+    "viewAll": "Ver todas →",
+    "storyLabel": "Nuestra historia",
+    "whoWeAre": "Quiénes somos →",
     "storyTitle": "Hechas con tiempo, a fuego lento",
     "storyBody": "Somos una familia que trabaja la cera desde hace muchos años. Cuando una vela nace, ha pasado por nuestras manos — y de ahí le viene su luz."
   },
@@ -38,8 +45,14 @@
     "personalize": "Personalizable"
   },
   "product": {
+    "vatIncluded": "IVA incluido",
+    "backToShop": "← Volver a la tienda",
     "addToCart": "Añadir a la cesta",
     "customize": "Personaliza esta",
+    "selectColor": "Selecciona un color para continuar",
+    "selectScent": "Selecciona un aroma para continuar",
+    "colorLabel": "Color",
+    "scentLabel": "Aroma",
     "inStock": "{n, plural, one {# unidad disponible} other {# unidades disponibles}}",
     "outOfStock": "Agotado",
     "description": "Descripción",

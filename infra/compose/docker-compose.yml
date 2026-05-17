@@ -4,6 +4,10 @@ services:
   postgres:
     image: postgres:16-alpine
     restart: unless-stopped
+    command: >
+      postgres
+      -c max_connections=200
+      -c shared_buffers=256MB
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-espelmes}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-espelmes_dev_password}

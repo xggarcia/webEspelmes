@@ -53,7 +53,7 @@ type CreateOptionValueDto = z.infer<typeof CreateOptionValueSchema>;
 type UpdateOptionValueDto = z.infer<typeof UpdateOptionValueSchema>;
 
 const CreateProductSchema = z.object({
-  slug: z.string().min(2).max(120).regex(/^[a-z0-9-]+$/),
+  slug: z.string().min(1).max(120).regex(/^[a-z0-9-]+$/),
   name: z.string().min(1).max(200),
   shortDescription: z.string().max(400).default(''),
   description: z.string().max(5000).default(''),
@@ -62,6 +62,8 @@ const CreateProductSchema = z.object({
   stock: z.number().int().nonnegative().default(0),
   isCustomizable: z.boolean().default(true),
   isActive: z.boolean().default(true),
+  isHeroFeatured: z.boolean().default(false),
+  isWeeklyFeatured: z.boolean().default(false),
   heroImageUrl: z.string().url().optional().nullable(),
   images: z
     .array(

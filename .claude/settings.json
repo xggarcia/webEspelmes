@@ -9,7 +9,10 @@
       "mcp__playwright__browser_wait_for",
       "Bash(git add *)",
       "Bash(git commit *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(pnpm --filter @espelmes/web typecheck)",
+      "Bash(npx prisma *)",
+      "Bash(pnpm --filter @espelmes/shared build)"
     ]
   }
 }

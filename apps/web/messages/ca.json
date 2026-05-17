@@ -17,11 +17,18 @@
     "logout": "Tanca la sessió"
   },
   "home": {
-    "heroTitle": "Cada espelma, una petita història",
+    "heroEyebrow": "Peces artesanals",
+    "heroTitle": "Cada peça, una petita història",
     "heroLead": "Treballem la cera a casa. Escollim les olors i els colors amb calma. Cada espelma surt de les nostres mans — i ara pot sortir amb el teu toc.",
     "ctaShop": "Veure la botiga",
     "ctaCustomize": "Personalitza la teva",
-    "featuredTitle": "Destacades aquesta setmana",
+    "featuredTitle": "Nous productes",
+    "weeklyLabel": "Selecció",
+    "weeklyTitle": "Destacades de la setmana",
+    "collectionLabel": "Col·lecció",
+    "viewAll": "Veure totes →",
+    "storyLabel": "La nostra història",
+    "whoWeAre": "Qui som →",
     "storyTitle": "Fetes amb temps, a foc lent",
     "storyBody": "Som una família que treballa la cera des de fa molts anys. Quan una espelma neix, ha passat per les nostres mans — i d'aquí és d'on li ve la seva llum."
   },
@@ -38,8 +45,14 @@
     "personalize": "Personalitzable"
   },
   "product": {
+    "vatIncluded": "IVA inclòs",
+    "backToShop": "← Tornar a la botiga",
     "addToCart": "Afegeix al cistell",
     "customize": "Personalitza aquesta",
+    "selectColor": "Selecciona un color per continuar",
+    "selectScent": "Selecciona una aroma per continuar",
+    "colorLabel": "Color",
+    "scentLabel": "Aroma",
     "inStock": "{n, plural, one {# unitat disponible} other {# unitats disponibles}}",
     "outOfStock": "Esgotat",
     "description": "Descripció",

@@ -53,8 +53,8 @@ const config: Config = {
       },
       animation: {
         flicker: 'flicker 2.4s ease-in-out infinite',
-        lift: 'lift 600ms cubic-bezier(.2,.7,.2,1) both',
-        fade: 'fade 500ms ease-out both',
+        lift: 'lift 700ms cubic-bezier(.16,1,.3,1) both',
+        fade: 'fade 600ms cubic-bezier(.16,1,.3,1) both',
       },
       letterSpacing: {
         widest2: '0.18em',

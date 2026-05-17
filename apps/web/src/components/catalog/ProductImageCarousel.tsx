@@ -13,29 +13,21 @@ export function ProductImageCarousel({
 }) {
   const [index, setIndex] = useState(0);
   const active = images[index] ?? null;
+  const hasMany = images.length > 1;
 
   if (!active) {
     return (
-      <div className="space-y-3">
-        <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-wax/40 shadow-warm">
-          <div className="flex h-full w-full items-center justify-center text-ember/30">
-            <svg width="100" height="130" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 3c-1.5 2-3 3.5-3 5.5A3 3 0 0 0 12 11.5 3 3 0 0 0 15 8.5C15 6.5 13.5 5 12 3z" />
-              <rect x="9" y="12" width="6" height="8" rx="1" opacity="0.6" />
-            </svg>
-          </div>
-        </div>
-      </div>
+      <div className="aspect-[3/4] w-full bg-hush/50" />
     );
   }
 
-  const hasMany = images.length > 1;
-
   return (
     <div className="space-y-3">
-      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-wax/40 shadow-warm">
+      {/* Main image */}
+      <div className="relative aspect-[3/4] w-full overflow-hidden bg-stone-100">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
+          key={active.url}
           src={active.url}
           alt={active.alt ?? productName}
           className="h-full w-full object-cover object-center"
@@ -46,34 +38,39 @@ export function ProductImageCarousel({
             <button
               type="button"
               onClick={() => setIndex((prev) => (prev - 1 + images.length) % images.length)}
-              className="absolute left-2 top-1/2 h-10 w-10 -translate-y-1/2 rounded-full bg-ink/65 text-base text-cream transition hover:bg-ink/85 sm:left-3"
               aria-label="Imatge anterior"
+              className="absolute left-4 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-ink backdrop-blur-sm transition hover:bg-white"
             >
-              ←
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </button>
             <button
               type="button"
               onClick={() => setIndex((prev) => (prev + 1) % images.length)}
-              className="absolute right-2 top-1/2 h-10 w-10 -translate-y-1/2 rounded-full bg-ink/65 text-base text-cream transition hover:bg-ink/85 sm:right-3"
               aria-label="Imatge següent"
+              className="absolute right-4 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-ink backdrop-blur-sm transition hover:bg-white"
             >
-              →
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </button>
           </>
         )}
       </div>
 
+      {/* Thumbnails */}
       {hasMany && (
-        <div className="grid grid-cols-4 gap-2 sm:grid-cols-5 lg:grid-cols-6">
+        <div className="flex gap-2 overflow-x-auto pb-1">
           {images.slice(0, 8).map((img, i) => (
             <button
               key={`${img.url}-${i}`}
               type="button"
               onClick={() => setIndex(i)}
-              className={`aspect-square overflow-hidden rounded-md bg-wax/40 ring-offset-2 transition ${
-                i === index ? 'ring-2 ring-ember' : 'hover:ring-1 hover:ring-ink/30'
-              }`}
               aria-label={`Veure imatge ${i + 1}`}
+              className={`relative aspect-square h-16 shrink-0 overflow-hidden bg-stone-100 transition-opacity duration-200 ${
+                i === index ? 'opacity-100 ring-1 ring-ink ring-offset-1' : 'opacity-50 hover:opacity-75'
+              }`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={img.url} alt={img.alt ?? ''} className="h-full w-full object-cover" />

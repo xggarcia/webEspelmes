@@ -152,6 +152,8 @@ model Product {
   stock            Int      @default(0)
   isCustomizable   Boolean  @default(true)
   isActive         Boolean  @default(true)
+  isHeroFeatured   Boolean  @default(false)
+  isWeeklyFeatured Boolean  @default(false)
   heroImageUrl     String?
   modelUrl         String?
   modelMeta        Json?
@@ -161,6 +163,8 @@ model Product {
   updatedAt        DateTime @updatedAt
 
   images           ProductImage[]
+  colors           ProductColor[]
+  scents           ProductScent[]
   options          ProductOption[]
   cartItems        CartItem[]
   orderItems       OrderItem[]
@@ -168,6 +172,50 @@ model Product {
 
   @@index([categoryId])
   @@index([isActive])
+}
+
+model Color {
+  id        String         @id @default(cuid())
+  name      String
+  hex       String
+  sortOrder Int            @default(0)
+  isActive  Boolean        @default(true)
+  createdAt DateTime       @default(now())
+
+  products  ProductColor[]
+}
+
+model Scent {
+  id        String         @id @default(cuid())
+  nameEs    String
+  nameCa    String
+  sortOrder Int            @default(0)
+  isActive  Boolean        @default(true)
+  createdAt DateTime       @default(now())
+
+  products  ProductScent[]
+}
+
+model ProductScent {
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  scent     Scent   @relation(fields: [scentId], references: [id], onDelete: Cascade)
+  scentId   String
+  sortOrder Int     @default(0)
+
+  @@id([productId, scentId])
+  @@index([productId])
+}
+
+model ProductColor {
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  color     Color   @relation(fields: [colorId], references: [id], onDelete: Cascade)
+  colorId   String
+  sortOrder Int     @default(0)
+
+  @@id([productId, colorId])
+  @@index([productId])
 }
 
 model ProductImage {

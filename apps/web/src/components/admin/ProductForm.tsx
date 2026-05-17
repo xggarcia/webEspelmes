@@ -5,6 +5,8 @@ import { useRouter } from '@/i18n/routing';
 import { OptionsEditor } from './OptionsEditor';
 
 type Category = { id: string; name: string; slug: string };
+type GlobalColor = { id: string; name: string; hex: string };
+type GlobalScent = { id: string; nameEs: string; nameCa: string };
 type OptionValue = {
   id: string;
   code: string;
@@ -32,11 +34,11 @@ type ProductInput = {
   categoryId: string;
   isCustomizable: boolean;
   isActive: boolean;
+  isHeroFeatured: boolean;
+  isWeeklyFeatured: boolean;
   vatRate: number;
   heroImageUrl: string | null;
   images?: { url: string; alt: string | null }[];
-  modelUrl?: string | null;
-  modelMeta?: { scale?: number; yOffset?: number; cameraFov?: number } | null;
 };
 
 function normalizeSlug(value: string) {
@@ -64,12 +66,40 @@ export function ProductForm({
   const [form, setForm] = useState<ProductInput>({
     ...initial,
     images: initial.images ?? [],
+    isHeroFeatured: initial.isHeroFeatured ?? false,
+    isWeeklyFeatured: initial.isWeeklyFeatured ?? false,
   });
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
-  const [uploadingModel, setUploadingModel] = useState(false);
   const [uploadingHero, setUploadingHero] = useState(false);
   const [uploadingGallery, setUploadingGallery] = useState(false);
+  const [allColors, setAllColors] = useState<GlobalColor[]>([]);
+  const [selectedColorIds, setSelectedColorIds] = useState<string[]>([]);
+  const [allScents, setAllScents] = useState<GlobalScent[]>([]);
+  const [selectedScentIds, setSelectedScentIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetch('/api/admin-proxy/admin/colors')
+      .then((r) => r.ok ? r.json() : [])
+      .then(setAllColors)
+      .catch(() => {});
+    fetch('/api/admin-proxy/admin/scents')
+      .then((r) => r.ok ? r.json() : [])
+      .then(setAllScents)
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (!initial.id) return;
+    fetch(`/api/admin-proxy/admin/colors/product/${initial.id}`)
+      .then((r) => r.ok ? r.json() : [])
+      .then((rows: { colorId: string }[]) => setSelectedColorIds(rows.map((r) => r.colorId)))
+      .catch(() => {});
+    fetch(`/api/admin-proxy/admin/scents/product/${initial.id}`)
+      .then((r) => r.ok ? r.json() : [])
+      .then((rows: { scentId: string }[]) => setSelectedScentIds(rows.map((r) => r.scentId)))
+      .catch(() => {});
+  }, [initial.id]);
 
   useEffect(() => {
     if (form.categoryId || categories.length === 0) return;
@@ -126,32 +156,6 @@ export function ProductForm({
     }
   }
 
-  async function uploadModel(file: File) {
-    setUploadingModel(true);
-    setErr(null);
-    try {
-      if (!file.name.toLowerCase().endsWith('.glb')) {
-        throw new Error('Nomes .glb');
-      }
-      if (file.size > 60 * 1024 * 1024) {
-        throw new Error('Maxim 60 MB');
-      }
-      const fd = new FormData();
-      fd.append('file', file);
-      const res = await fetch(`/api/admin-proxy/admin/uploads/model`, {
-        method: 'POST',
-        body: fd,
-      });
-      if (!res.ok) throw new Error(await res.text());
-      const { url } = (await res.json()) as { url: string };
-      setForm((f) => ({ ...f, modelUrl: url }));
-    } catch (e) {
-      setErr(e instanceof Error ? e.message : 'Error pujant el model');
-    } finally {
-      setUploadingModel(false);
-    }
-  }
-
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
@@ -172,10 +176,10 @@ export function ProductForm({
         isCustomizable: form.isCustomizable,
         isActive: form.isActive,
         vatRate: Number(form.vatRate),
+        isHeroFeatured: form.isHeroFeatured,
+        isWeeklyFeatured: form.isWeeklyFeatured,
         heroImageUrl: form.heroImageUrl || null,
         images: (form.images ?? []).map((img) => ({ url: img.url, alt: img.alt })),
-        modelUrl: form.modelUrl || null,
-        modelMeta: form.modelMeta ?? null,
       };
       const res = await fetch(url, {
         method: isUpdate ? 'PATCH' : 'POST',
@@ -183,11 +187,25 @@ export function ProductForm({
         body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error(await res.text());
+
+      const productId = isUpdate ? form.id! : ((await res.json()) as { id: string }).id;
+
+      await fetch(`/api/admin-proxy/admin/colors/product/${productId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ colorIds: selectedColorIds }),
+      });
+
+      await fetch(`/api/admin-proxy/admin/scents/product/${productId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scentIds: selectedScentIds }),
+      });
+
       if (isUpdate) {
         router.push('/admin/products');
       } else {
-        const created = (await res.json()) as { id: string };
-        router.push(`/admin/products/${created.id}`);
+        router.push(`/admin/products/${productId}`);
       }
       router.refresh();
     } catch (e) {
@@ -405,86 +423,14 @@ export function ProductForm({
         )}
       </fieldset>
 
-      <fieldset className="space-y-3 rounded-md border border-ink/10 p-3">
-        <legend className="px-1 text-xs font-medium uppercase tracking-wider text-ink/60">
-          Model 3D (.glb)
-        </legend>
-        <div className="flex items-center gap-3 text-sm">
-          <input
-            type="file"
-            accept=".glb,model/gltf-binary"
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (f) uploadModel(f);
-            }}
-            disabled={uploadingModel}
-          />
-          {uploadingModel && <span className="text-ink/60">Pujant...</span>}
-        </div>
-        {form.modelUrl ? (
-          <div className="flex items-center gap-3 text-xs">
-            <a
-              href={form.modelUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="truncate text-ember underline"
-            >
-              {form.modelUrl}
-            </a>
-            <button
-              type="button"
-              onClick={() => setForm({ ...form, modelUrl: null })}
-              className="text-ember/80 hover:text-ember"
-            >
-              Eliminar
-            </button>
-          </div>
-        ) : (
-          <p className="text-xs text-ink/50">
-            Sense model. El configurador usara el mode 2D.
-          </p>
-        )}
-        <div className="grid grid-cols-2 gap-3">
-          <Field label="Escala">
-            <input
-              type="number"
-              step="0.1"
-              min={0.1}
-              value={form.modelMeta?.scale ?? 1}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  modelMeta: { ...(form.modelMeta ?? {}), scale: +e.target.value },
-                })
-              }
-              className={inputCls}
-            />
-          </Field>
-          <Field label="Desplacament Y">
-            <input
-              type="number"
-              step="0.05"
-              value={form.modelMeta?.yOffset ?? 0}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  modelMeta: { ...(form.modelMeta ?? {}), yOffset: +e.target.value },
-                })
-              }
-              className={inputCls}
-            />
-          </Field>
-        </div>
-      </fieldset>
-
-      <div className="flex gap-4">
+      <div className="flex flex-wrap gap-4">
         <label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"
             checked={form.isCustomizable}
             onChange={(e) => setForm({ ...form, isCustomizable: e.target.checked })}
           />
-          Personalitzable
+          Personalitzable (amb colors)
         </label>
         <label className="flex items-center gap-2 text-sm">
           <input
@@ -494,12 +440,118 @@ export function ProductForm({
           />
           Actiu
         </label>
+        <label className="flex items-center gap-2 text-sm font-medium text-ember">
+          <input
+            type="checkbox"
+            checked={form.isHeroFeatured}
+            onChange={(e) => setForm({ ...form, isHeroFeatured: e.target.checked })}
+          />
+          Mostrar a la portada (hero)
+        </label>
+        <label className="flex items-center gap-2 text-sm font-medium text-ember">
+          <input
+            type="checkbox"
+            checked={form.isWeeklyFeatured}
+            onChange={(e) => setForm({ ...form, isWeeklyFeatured: e.target.checked })}
+          />
+          Destacada de la setmana
+        </label>
       </div>
 
-      {form.isCustomizable && form.id && (
-        <div className="rounded-md border border-ink/10 p-4">
-          <OptionsEditor productId={form.id} initial={initialOptions} />
-        </div>
+      {form.isCustomizable && (
+        <fieldset className="space-y-3 rounded-md border border-ember/20 bg-ember/[0.03] p-4">
+          <legend className="px-1 text-xs font-medium uppercase tracking-wider text-ember/70">
+            Colors del producte
+          </legend>
+          {allColors.length === 0 ? (
+            <p className="text-xs text-ink/50">
+              No hi ha colors globals. Afegeix-los a{' '}
+              <a href="/admin/colors" className="underline text-ember">
+                Admin → Colors
+              </a>{' '}
+              primer.
+            </p>
+          ) : (
+            <div className="flex flex-wrap gap-3">
+              {allColors.map((c) => {
+                const checked = selectedColorIds.includes(c.id);
+                return (
+                  <label
+                    key={c.id}
+                    className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm transition ${
+                      checked
+                        ? 'border-ember bg-ember/5 text-ember'
+                        : 'border-ink/15 text-ink/60 hover:border-ink/30'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      className="sr-only"
+                      checked={checked}
+                      onChange={() =>
+                        setSelectedColorIds((ids) =>
+                          checked ? ids.filter((id) => id !== c.id) : [...ids, c.id],
+                        )
+                      }
+                    />
+                    <span
+                      className="h-4 w-4 flex-shrink-0 rounded-full border border-ink/10"
+                      style={{ background: c.hex }}
+                    />
+                    {c.name}
+                    <span className="font-mono text-[10px] text-ink/30">{c.hex}</span>
+                  </label>
+                );
+              })}
+            </div>
+          )}
+        </fieldset>
+      )}
+
+      {form.isCustomizable && (
+        <fieldset className="space-y-3 rounded-md border border-ember/20 bg-ember/[0.03] p-4">
+          <legend className="px-1 text-xs font-medium uppercase tracking-wider text-ember/70">
+            Aromes del producte
+          </legend>
+          {allScents.length === 0 ? (
+            <p className="text-xs text-ink/50">
+              No hi ha aromes globals. Afegeix-les a{' '}
+              <a href="/admin/scents" className="underline text-ember">
+                Admin → Aromes
+              </a>{' '}
+              primer.
+            </p>
+          ) : (
+            <div className="flex flex-wrap gap-3">
+              {allScents.map((s) => {
+                const checked = selectedScentIds.includes(s.id);
+                return (
+                  <label
+                    key={s.id}
+                    className={`flex cursor-pointer flex-col rounded-lg border px-3 py-2 text-sm transition ${
+                      checked
+                        ? 'border-ember bg-ember/5 text-ember'
+                        : 'border-ink/15 text-ink/60 hover:border-ink/30'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      className="sr-only"
+                      checked={checked}
+                      onChange={() =>
+                        setSelectedScentIds((ids) =>
+                          checked ? ids.filter((id) => id !== s.id) : [...ids, s.id],
+                        )
+                      }
+                    />
+                    <span className="font-medium">{s.nameEs}</span>
+                    <span className="text-[11px] opacity-60">{s.nameCa}</span>
+                  </label>
+                );
+              })}
+            </div>
+          )}
+        </fieldset>
       )}
 
       {err && <p className="text-sm text-ember">{err}</p>}

@@ -66,12 +66,28 @@ export const ProductOptionSchema = z.object({
   values: z.array(ProductOptionValueSchema),
 });
 
+export const ProductColorSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  hex: z.string(),
+});
+export type ProductColor = z.infer<typeof ProductColorSchema>;
+
+export const ProductScentSchema = z.object({
+  id: z.string(),
+  nameEs: z.string(),
+  nameCa: z.string(),
+});
+export type ProductScent = z.infer<typeof ProductScentSchema>;
+
 export const ProductDetailSchema = ProductSummarySchema.extend({
   description: z.string(),
   images: z.array(z.object({ url: z.string().url(), alt: z.string().nullable() })),
   vatRate: z.number().min(0).max(1),
   stock: z.number().int().nonnegative(),
   options: z.array(ProductOptionSchema),
+  colors: z.array(ProductColorSchema).default([]),
+  scents: z.array(ProductScentSchema).default([]),
   modelUrl: z.string().nullable().optional(),
   modelMeta: ModelMetaSchema.nullable().optional(),
 });

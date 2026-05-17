@@ -10,6 +10,8 @@ export type ProductListQuery = {
   categorySlug?: string;
   search?: string;
   customizableOnly?: boolean;
+  heroFeatured?: boolean;
+  weeklyFeatured?: boolean;
 };
 
 @Injectable()
@@ -29,6 +31,8 @@ export class ProductsService {
           }
         : {}),
       ...(q.customizableOnly ? { isCustomizable: true } : {}),
+      ...(q.heroFeatured ? { isHeroFeatured: true } : {}),
+      ...(q.weeklyFeatured ? { isWeeklyFeatured: true } : {}),
     };
 
     const orderBy: Prisma.ProductOrderByWithRelationInput =
@@ -38,7 +42,7 @@ export class ProductsService {
           ? { basePriceCents: 'desc' }
           : { createdAt: 'desc' };
 
-    const [total, products] = await this.prisma.$transaction([
+    const [total, products] = await Promise.all([
       this.prisma.product.count({ where }),
       this.prisma.product.findMany({
         where,
@@ -68,11 +72,23 @@ export class ProductsService {
           orderBy: { sortOrder: 'asc' },
           include: { values: { orderBy: { sortOrder: 'asc' } } },
         },
+        colors: {
+          orderBy: { sortOrder: 'asc' },
+          include: { color: true },
+        },
+        scents: {
+          orderBy: { sortOrder: 'asc' },
+          include: { scent: true },
+        },
       },
     });
     if (!p || !p.isActive) {
       throw new NotFoundException({ code: 'PRODUCT_NOT_FOUND', message: 'Product not found' });
     }
-    return toProductDetail(p);
+    return {
+      ...toProductDetail(p),
+      colors: p.colors.map((pc) => ({ id: pc.color.id, name: pc.color.name, hex: pc.color.hex })),
+      scents: p.scents.map((ps) => ({ id: ps.scent.id, nameEs: ps.scent.nameEs, nameCa: ps.scent.nameCa })),
+    };
   }
 }

@@ -30,6 +30,8 @@ type AdminProductDetail = {
   categoryId: string;
   isCustomizable: boolean;
   isActive: boolean;
+  isHeroFeatured: boolean;
+  isWeeklyFeatured: boolean;
   vatRate: number;
   heroImageUrl: string | null;
   images: { url: string; alt: string | null }[];
@@ -68,10 +70,10 @@ export default async function EditProductPage({
           isCustomizable: product.isCustomizable,
           isActive: product.isActive,
           vatRate: product.vatRate,
+          isHeroFeatured: product.isHeroFeatured ?? false,
+          isWeeklyFeatured: product.isWeeklyFeatured ?? false,
           heroImageUrl: product.heroImageUrl,
           images: product.images ?? [],
-          modelUrl: product.modelUrl ?? null,
-          modelMeta: product.modelMeta ?? null,
         }}
       />
     </div>

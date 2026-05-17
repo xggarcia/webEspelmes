@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
-import { Fraunces, Inter, JetBrains_Mono } from 'next/font/google';
+import { Fraunces, DM_Sans, JetBrains_Mono } from 'next/font/google';
 import { routing } from '@/i18n/routing';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
@@ -13,10 +13,11 @@ const display = Fraunces({
   display: 'swap',
   axes: ['opsz', 'SOFT'],
 });
-const sans = Inter({
+const sans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
+  weight: ['300', '400', '500', '600'],
 });
 const mono = JetBrains_Mono({
   subsets: ['latin'],
@@ -42,7 +43,7 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
   const messages = await getMessages();
   return (
-    <html lang={locale} className={`${display.variable} ${sans.variable} ${mono.variable}`}>
+    <html lang={locale} className={`${display.variable} ${sans.variable} ${mono.variable}`} suppressHydrationWarning>
       <body className="min-h-screen bg-bone">
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Header />

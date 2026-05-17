@@ -21,6 +21,8 @@ export default async function NewProductPage() {
           categoryId: '',
           isCustomizable: true,
           isActive: true,
+          isHeroFeatured: false,
+          isWeeklyFeatured: false,
           vatRate: 0.21,
           heroImageUrl: null,
         }}

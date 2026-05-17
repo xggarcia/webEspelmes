@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ProductCard } from '@/components/catalog/ProductCard';
 import { CategoryTabs } from '@/components/catalog/CategoryTabs';
+import { Reveal } from '@/components/ui/Reveal';
 import { safeApiFetch } from '@/lib/api-server';
 import type { ProductSummary } from '@espelmes/shared';
 
@@ -9,80 +10,104 @@ type Props = {
   searchParams: Promise<{ cat?: string; sort?: string }>;
 };
 
+const SORT_OPTIONS = [
+  { value: 'new',        label: 'Nous' },
+  { value: 'price_asc',  label: 'Preu ↑' },
+  { value: 'price_desc', label: 'Preu ↓' },
+] as const;
+
 export default async function CatalogPage({ params, searchParams }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations('catalog');
   const sp = await searchParams;
   const active = sp.cat ?? 'all';
+  const activeSort = sp.sort ?? 'new';
 
   const qs = new URLSearchParams();
   qs.set('pageSize', '24');
-  qs.set('sort', sp.sort ?? 'new');
+  qs.set('sort', activeSort);
   if (sp.cat && sp.cat !== 'all') qs.set('categorySlug', sp.cat);
 
-  const list = await safeApiFetch<{ items: ProductSummary[]; total: number }>(`/products?${qs.toString()}`);
+  const list = await safeApiFetch<{ items: ProductSummary[]; total: number }>(
+    `/products?${qs.toString()}`,
+  );
   const items = list?.items ?? [];
   const total = list?.total ?? items.length;
 
   const tabs = [
-    { slug: 'all', label: t('filterAll') },
-    { slug: 'veles', label: 'Espelmes' },
+    { slug: 'all',    label: t('filterAll') },
+    { slug: 'veles',  label: 'Espelmes' },
     { slug: 'ciment', label: 'Ciment' },
   ];
 
   return (
-    <div className="container-lux pt-10 pb-24 md:pt-16">
-      <header className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="eyebrow mb-3">Col·lecció</p>
-          <h1 className="font-display text-5xl text-ink md:text-6xl text-balance">
-            {t('title')}
-          </h1>
-          <p className="mt-3 max-w-xl text-ink/65 text-pretty">{t('lead')}</p>
+    <div className="container-lux pt-16 pb-28 md:pt-24">
+
+      {/* ── Header ─────────────────────────────────────────────── */}
+      <header className="mb-14 animate-lift">
+        <div className="flex items-end justify-between gap-6">
+          <div>
+            <p className="eyebrow mb-4">Col·lecció</p>
+            <h1 className="font-display text-[52px] leading-[1.02] tracking-tight text-ink md:text-[72px]">
+              {t('title')}
+            </h1>
+          </div>
+          <p className="meta mb-3 hidden md:block">{total} peces</p>
         </div>
-        <p className="meta">{total} peces · actualitzat</p>
+        {t('lead') && (
+          <p className="mt-4 max-w-[52ch] text-[15px] leading-relaxed text-ink/45">
+            {t('lead')}
+          </p>
+        )}
       </header>
 
-      <div className="mb-10 flex flex-wrap items-center justify-between gap-4 border-y border-ink/[0.07] py-5">
+      {/* ── Filters ────────────────────────────────────────────── */}
+      <div className="mb-12 flex flex-wrap items-center justify-between gap-5 border-b border-ink/[0.07] pb-0">
         <CategoryTabs tabs={tabs} active={active} />
-        <div className="flex items-center gap-1 text-sm">
-          <span className="meta mr-3">{t('sort')}</span>
-          {(['new', 'price_asc', 'price_desc'] as const).map((v) => {
-            const lbl = v === 'new' ? t('sortNew') : v === 'price_asc' ? t('sortPriceAsc') : t('sortPriceDesc');
-            const params = new URLSearchParams();
-            if (active !== 'all') params.set('cat', active);
-            params.set('sort', v);
-            const isActive = (sp.sort ?? 'new') === v;
+
+        <div className="mb-3 flex items-center gap-1">
+          <span className="meta mr-4 text-ink/35">{t('sort')}</span>
+          {SORT_OPTIONS.map(({ value, label }) => {
+            const p = new URLSearchParams();
+            if (active !== 'all') p.set('cat', active);
+            p.set('sort', value);
+            const isActive = activeSort === value;
             return (
               <a
-                key={v}
-                href={`?${params.toString()}`}
-                className={`rounded-full px-3 py-1 no-underline transition ${
-                  isActive ? 'bg-ink text-bone' : 'text-ink/65 hover:text-ink'
+                key={value}
+                href={`?${p.toString()}`}
+                className={`rounded-full px-3 py-1 text-[13px] no-underline transition-colors duration-150 ${
+                  isActive
+                    ? 'bg-ink text-white'
+                    : 'text-ink/40 hover:text-ink/70'
                 }`}
               >
-                {lbl}
+                {label}
               </a>
             );
           })}
         </div>
       </div>
 
+      {/* ── Grid ───────────────────────────────────────────────── */}
       {items.length === 0 ? (
-        <div className="rounded-2xl border border-ink/[0.08] bg-hush/30 px-6 py-24 text-center">
-          <p className="text-ink/60">{t('empty')}</p>
+        <div className="py-32 text-center">
+          <p className="text-[15px] text-ink/30">{t('empty')}</p>
         </div>
       ) : (
         <div
-          key={active}
-          className="grid animate-fade gap-x-6 gap-y-14 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+          key={active + activeSort}
+          className="grid animate-fade gap-x-5 gap-y-14 grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
         >
-          {items.map((p) => (
-            <ProductCard key={p.id} product={p} />
+          {items.map((p, i) => (
+            <Reveal key={p.id} delay={Math.min(i, 7) * 60}>
+              <ProductCard product={p} />
+            </Reveal>
           ))}
         </div>
       )}
+
     </div>
   );
 }

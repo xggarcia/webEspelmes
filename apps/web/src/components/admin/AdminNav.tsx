@@ -1,11 +1,14 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useState } from 'react';
-import { Link } from '@/i18n/routing';
+import { NavLink } from '@/components/ui/NavLink';
 
 const items: { href: string; label: string }[] = [
   { href: '/admin/dashboard', label: 'Tauler' },
   { href: '/admin/products', label: 'Productes' },
+  { href: '/admin/categories', label: 'Categories' },
+  { href: '/admin/colors', label: 'Colors' },
+  { href: '/admin/scents', label: 'Aromes' },
   { href: '/admin/orders', label: 'Comandes' },
   { href: '/admin/customers', label: 'Clients' },
   { href: '/admin/commands', label: 'Ordres' },
@@ -24,7 +27,7 @@ export function AdminNav() {
       {items.map((it) => {
         const active = pathname?.includes(it.href);
         return (
-          <Link
+          <NavLink
             key={it.href}
             href={it.href}
             className={`rounded-md px-3 py-1.5 text-sm transition ${
@@ -34,10 +37,9 @@ export function AdminNav() {
             }`}
           >
             {it.label}
-          </Link>
+          </NavLink>
         );
       })}
     </nav>
   );
 }
-

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react'; // useState kept for status/addErr/adding
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { API_BASE } from '@/lib/api';
@@ -14,8 +14,6 @@ import type {
   ConfiguratorState,
   ProductDetail,
 } from '@espelmes/shared';
-import { LivePreview2D } from './LivePreview2D';
-import { LivePreview3D } from './LivePreview3D';
 import { ProductImageCarousel } from '@/components/catalog/ProductImageCarousel';
 import { ShapeSelect } from './controls/ShapeSelect';
 import { SizeSelect } from './controls/SizeSelect';
@@ -44,18 +42,12 @@ export function ConfiguratorRoot({
   const router = useRouter();
   const [server, setServer] = useState<ConfiguratorServerState | null>(null);
   const [status, setStatus] = useState<'connecting' | 'ready' | 'offline'>('connecting');
-  const modelUrl = (product as { modelUrl?: string | null }).modelUrl ?? null;
   const imagePreview =
     product.images.length > 0
       ? product.images
       : product.heroImageUrl
         ? [{ url: product.heroImageUrl, alt: product.name }]
         : [];
-  const modelMeta =
-    (product as { modelMeta?: { scale?: number; yOffset?: number; cameraFov?: number } | null })
-      .modelMeta ?? null;
-  const [model3dFailed, setModel3dFailed] = useState(false);
-  const show3D = Boolean(modelUrl) && !model3dFailed;
   const [addErr, setAddErr] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   const patchThrottle = useRef<number | null>(null);
@@ -187,17 +179,10 @@ export function ConfiguratorRoot({
           <div className="text-xs text-ember/80">{t('disconnected')}</div>
         )}
         <div className="mx-auto w-full max-w-[920px] lg:sticky lg:top-24">
-          {show3D ? (
-            <LivePreview3D
-              state={state}
-              modelUrl={modelUrl}
-              modelMeta={modelMeta}
-              onFail={() => setModel3dFailed(true)}
-            />
-          ) : imagePreview.length > 0 ? (
+          {imagePreview.length > 0 ? (
             <ProductImageCarousel images={imagePreview} productName={product.name} />
           ) : (
-            <LivePreview2D state={state} />
+            <div className="aspect-[4/5] w-full rounded-2xl bg-hush/40" />
           )}
         </div>
       </div>

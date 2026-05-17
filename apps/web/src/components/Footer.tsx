@@ -7,7 +7,7 @@ export async function Footer() {
   const tBrand = await getTranslations('brand');
   const year = new Date().getFullYear();
   return (
-    <footer className="mt-32 border-t border-ink/[0.07] bg-hush/40">
+    <footer className="mt-32 border-t border-ink/[0.07] bg-stone-50">
       <div className="container-lux py-16">
         <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div className="space-y-3">
