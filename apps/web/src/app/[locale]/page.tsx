@@ -2,8 +2,10 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { safeApiFetch } from '@/lib/api-server';
 import { ProductCard } from '@/components/catalog/ProductCard';
+import { FeaturedGrid } from '@/components/catalog/FeaturedGrid';
 import { Reveal } from '@/components/ui/Reveal';
 import { HeroCarousel } from '@/components/ui/HeroCarousel';
+import { Flame } from '@espelmes/ui';
 import type { ProductSummary } from '@espelmes/shared';
 
 type Props = { params: Promise<{ locale: string }> };
@@ -42,6 +44,10 @@ export default async function HomePage({ params }: Props) {
     .filter((p) => p.heroImageUrl)
     .map((p) => ({ url: p.heroImageUrl!, alt: p.name }));
 
+  const customizableSlug = (
+    await safeApiFetch<{ items: ProductSummary[] }>('/products?customizableOnly=true&pageSize=1&sort=new')
+  )?.items[0]?.slug ?? null;
+
   return (
     <div className="overflow-hidden">
 
@@ -58,8 +64,12 @@ export default async function HomePage({ params }: Props) {
               {t('heroEyebrow')}
             </p>
             <h1
-              className="font-display text-[52px] leading-[1.02] tracking-tight text-ink md:text-[68px] lg:text-[80px] text-balance animate-lift"
-              style={{ animationDelay: '80ms' }}
+              className="font-display text-balance animate-lift text-ink tracking-tight leading-[0.97]"
+              style={{
+                fontSize: 'clamp(52px, 8vw, 96px)',
+                animationDelay: '80ms',
+                fontVariationSettings: "'SOFT' 80, 'opsz' 48",
+              }}
             >
               {t('heroTitle')}
             </h1>
@@ -76,15 +86,29 @@ export default async function HomePage({ params }: Props) {
               <Link href="/botiga" className="btn-primary no-underline">
                 {t('ctaShop')}
               </Link>
+              {customizableSlug && (
+                <Link
+                  href={`/personalitza/${customizableSlug}`}
+                  className="btn-ghost no-underline"
+                >
+                  {t('ctaCustomize')}
+                </Link>
+              )}
             </div>
           </div>
 
-          {/* Right: hero carousel */}
+          {/* Right: hero carousel or warm fallback */}
           <div
             className="relative hidden md:block animate-fade"
             style={{ animationDelay: '100ms' }}
           >
-            <HeroCarousel slides={heroSlides} />
+            {heroSlides.length > 0 ? (
+              <HeroCarousel slides={heroSlides} />
+            ) : (
+              <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[2px] bg-hush flex items-center justify-center">
+                <Flame className="h-28 w-auto text-ember/20" aria-hidden />
+              </div>
+            )}
           </div>
 
         </div>
@@ -124,8 +148,8 @@ export default async function HomePage({ params }: Props) {
             </Link>
           </div>
 
-          {/* Horizontal scroll */}
-          <div className="flex gap-5 overflow-x-auto pb-4 pl-5 pr-5 sm:pl-8 sm:pr-8 md:pl-[max(2rem,calc((100vw-1240px)/2))] md:pr-[max(2rem,calc((100vw-1240px)/2))]"
+          <div
+            className="flex gap-5 overflow-x-auto pb-4 pl-5 pr-5 sm:pl-8 sm:pr-8 md:pl-[max(2rem,calc((100vw-1240px)/2))] md:pr-[max(2rem,calc((100vw-1240px)/2))]"
             style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}
           >
             {weekly.items.map((p, i) => (
@@ -143,8 +167,8 @@ export default async function HomePage({ params }: Props) {
         </Reveal>
       )}
 
-      {/* ── RECOMANADES ─────────────────────────────────────────── */}
-      <Reveal as="section" className="container-lux pb-24 md:pb-32">
+      {/* ── COL·LECCIÓ ──────────────────────────────────────────── */}
+      <Reveal as="section" className="container-lux py-24 md:py-32">
         <div className="mb-14 flex items-end justify-between gap-6">
           <div>
             <p className="eyebrow mb-3">{t('collectionLabel')}</p>
@@ -164,13 +188,7 @@ export default async function HomePage({ params }: Props) {
             </p>
           </div>
         ) : (
-          <div className="grid gap-x-5 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
-            {featured.items.slice(0, 4).map((p, i) => (
-              <Reveal key={p.id} delay={i * 90}>
-                <ProductCard product={p} />
-              </Reveal>
-            ))}
-          </div>
+          <FeaturedGrid items={featured.items} />
         )}
       </Reveal>
 
@@ -179,16 +197,16 @@ export default async function HomePage({ params }: Props) {
         <div className="container-lux py-24 md:py-32">
           <div className="grid gap-12 md:grid-cols-2 md:items-center md:gap-20 lg:gap-32">
 
-            <div className="aspect-[4/5] overflow-hidden rounded-[2px] bg-hush/60 order-last md:order-first">
-              {/* Story image */}
+            <div className="aspect-[4/5] overflow-hidden rounded-[2px] bg-hush order-last md:order-first flex items-center justify-center">
+              <Flame className="h-32 w-auto text-ember/15" aria-hidden />
             </div>
 
             <div>
               <p className="eyebrow mb-6">{t('storyLabel')}</p>
-              <h2 className="font-display text-[34px] leading-[1.08] tracking-tight text-ink md:text-[46px] text-balance">
+              <h2 className="font-display text-[34px] leading-[1.08] tracking-tight text-ink text-balance md:text-[46px]">
                 {t('storyTitle')}
               </h2>
-              <p className="mt-6 text-[15px] leading-relaxed text-ink/55 max-w-[46ch] text-pretty">
+              <p className="mt-6 max-w-[46ch] text-[15px] leading-relaxed text-ink/55 text-pretty">
                 {t('storyBody')}
               </p>
               <Link

@@ -10,11 +10,7 @@ type Props = {
   searchParams: Promise<{ cat?: string; sort?: string }>;
 };
 
-const SORT_OPTIONS = [
-  { value: 'new',        label: 'Nous' },
-  { value: 'price_asc',  label: 'Preu ↑' },
-  { value: 'price_desc', label: 'Preu ↓' },
-] as const;
+type Category = { id: string; slug: string; name: string; sortOrder: number };
 
 export default async function CatalogPage({ params, searchParams }: Props) {
   const { locale } = await params;
@@ -24,21 +20,28 @@ export default async function CatalogPage({ params, searchParams }: Props) {
   const active = sp.cat ?? 'all';
   const activeSort = sp.sort ?? 'new';
 
+  const SORT_OPTIONS = [
+    { value: 'new',        label: t('sortNew') },
+    { value: 'price_asc',  label: t('sortPriceAsc') },
+    { value: 'price_desc', label: t('sortPriceDesc') },
+  ] as const;
+
   const qs = new URLSearchParams();
   qs.set('pageSize', '24');
   qs.set('sort', activeSort);
   if (sp.cat && sp.cat !== 'all') qs.set('categorySlug', sp.cat);
 
-  const list = await safeApiFetch<{ items: ProductSummary[]; total: number }>(
-    `/products?${qs.toString()}`,
-  );
+  const [list, cats] = await Promise.all([
+    safeApiFetch<{ items: ProductSummary[]; total: number }>(`/products?${qs.toString()}`),
+    safeApiFetch<Category[]>('/categories'),
+  ]);
+
   const items = list?.items ?? [];
   const total = list?.total ?? items.length;
 
   const tabs = [
-    { slug: 'all',    label: t('filterAll') },
-    { slug: 'veles',  label: 'Espelmes' },
-    { slug: 'ciment', label: 'Ciment' },
+    { slug: 'all', label: t('filterAll') },
+    ...(cats ?? []).map((c) => ({ slug: c.slug, label: c.name })),
   ];
 
   return (
@@ -47,19 +50,11 @@ export default async function CatalogPage({ params, searchParams }: Props) {
       {/* ── Header ─────────────────────────────────────────────── */}
       <header className="mb-14 animate-lift">
         <div className="flex items-end justify-between gap-6">
-          <div>
-            <p className="eyebrow mb-4">Col·lecció</p>
-            <h1 className="font-display text-[52px] leading-[1.02] tracking-tight text-ink md:text-[72px]">
-              {t('title')}
-            </h1>
-          </div>
-          <p className="meta mb-3 hidden md:block">{total} peces</p>
+          <h1 className="font-display text-[52px] leading-[1.02] tracking-tight text-ink md:text-[72px]">
+            {t('title')}
+          </h1>
+          <p className="meta mb-3">{total} peces</p>
         </div>
-        {t('lead') && (
-          <p className="mt-4 max-w-[52ch] text-[15px] leading-relaxed text-ink/45">
-            {t('lead')}
-          </p>
-        )}
       </header>
 
       {/* ── Filters ────────────────────────────────────────────── */}
@@ -79,7 +74,7 @@ export default async function CatalogPage({ params, searchParams }: Props) {
                 href={`?${p.toString()}`}
                 className={`rounded-full px-3 py-1 text-[13px] no-underline transition-colors duration-150 ${
                   isActive
-                    ? 'bg-ink text-white'
+                    ? 'bg-ink text-bone'
                     : 'text-ink/40 hover:text-ink/70'
                 }`}
               >
@@ -98,7 +93,7 @@ export default async function CatalogPage({ params, searchParams }: Props) {
       ) : (
         <div
           key={active + activeSort}
-          className="grid animate-fade gap-x-5 gap-y-14 grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+          className="grid animate-fade grid-cols-2 gap-x-5 gap-y-14 md:grid-cols-3"
         >
           {items.map((p, i) => (
             <Reveal key={p.id} delay={Math.min(i, 7) * 60}>

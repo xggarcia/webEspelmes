@@ -12,7 +12,13 @@
       "Bash(git push *)",
       "Bash(pnpm --filter @espelmes/web typecheck)",
       "Bash(npx prisma *)",
-      "Bash(pnpm --filter @espelmes/shared build)"
+      "Bash(pnpm --filter @espelmes/shared build)",
+      "Bash(node -e \"const d=require\\('./apps/web/messages/ca.json'\\); console.log\\(JSON.stringify\\(d.home,null,2\\)\\)\")",
+      "Bash(node -e \"const d=require\\('./apps/web/messages/ca.json'\\); const keys=Object.keys\\(d\\); console.log\\(keys\\)\")",
+      "Bash(node -e \"const d=require\\('./apps/web/messages/ca.json'\\); console.log\\(JSON.stringify\\({brand:d.brand, configurator:d.configurator}, null,2\\)\\)\")",
+      "Bash(node -e \"const d=require\\('./apps/web/messages/es.json'\\); console.log\\(JSON.stringify\\(d.home,null,2\\)\\)\")",
+      "Bash(node -e \"const d=require\\('./apps/web/messages/es.json'\\); console.log\\(JSON.stringify\\(d.brand,null,2\\)\\)\")",
+      "Bash(pnpm --filter @espelmes/web build)"
     ]
   }
 }
