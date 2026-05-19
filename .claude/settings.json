@@ -18,7 +18,8 @@
       "Bash(node -e \"const d=require\\('./apps/web/messages/ca.json'\\); console.log\\(JSON.stringify\\({brand:d.brand, configurator:d.configurator}, null,2\\)\\)\")",
       "Bash(node -e \"const d=require\\('./apps/web/messages/es.json'\\); console.log\\(JSON.stringify\\(d.home,null,2\\)\\)\")",
       "Bash(node -e \"const d=require\\('./apps/web/messages/es.json'\\); console.log\\(JSON.stringify\\(d.brand,null,2\\)\\)\")",
-      "Bash(pnpm --filter @espelmes/web build)"
+      "Bash(pnpm --filter @espelmes/web build)",
+      "Bash(gh pr *)"
     ]
   }
 }
