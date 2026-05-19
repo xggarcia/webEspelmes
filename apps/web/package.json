@@ -15,6 +15,7 @@
   "dependencies": {
     "@espelmes/shared": "workspace:*",
     "@espelmes/ui": "workspace:*",
+    "@vercel/speed-insights": "^2.0.0",
     "clsx": "^2.1.1",
     "next": "15.5.15",
     "next-intl": "^3.26.0",
