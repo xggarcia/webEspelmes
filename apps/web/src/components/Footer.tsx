@@ -43,7 +43,7 @@ export async function Footer() {
         </div>
         <div className="mt-16 flex flex-col items-start justify-between gap-2 border-t border-ink/[0.07] pt-6 text-xs text-ink/55 md:flex-row md:items-center">
           <p>&copy; {year} {tBrand('name')} &mdash; {t('rights')}</p>
-          <p className="meta">Manresa &middot; Catalunya</p>
+          <p className="meta">Barcelona &middot; Catalunya</p>
         </div>
       </div>
     </footer>
