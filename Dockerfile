@@ -30,4 +30,4 @@ RUN pnpm --filter @espelmes/api exec prisma generate
 RUN pnpm --filter @espelmes/api build
 
 EXPOSE 4000
-CMD ["pnpm", "--filter", "@espelmes/api", "start:prod"]
+CMD ["sh", "-c", "pnpm --filter @espelmes/api prisma migrate deploy && node apps/api/dist/main.js"]
